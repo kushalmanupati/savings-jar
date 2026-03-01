@@ -1,22 +1,21 @@
-const CACHE = 'moneyjars-v1';
+const CACHE = 'moneyjars-v2';
+const BASE = '/savings-jar';
 
 const ASSETS = [
-  '/',
-  '/index.html',
-  '/manifest.json',
-  '/icon-192.png',
-  '/icon-512.png',
-  'https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Fredoka+One&display=swap',
+  BASE + '/',
+  BASE + '/index.html',
+  BASE + '/manifest.json',
+  BASE + '/icon-192.png',
+  BASE + '/icon-512.png',
 ];
 
 // Install — cache all core assets
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE).then(cache => {
-      // Cache local assets first (these must succeed)
-      return cache.addAll(['/', '/index.html', '/manifest.json'])
+      return cache.addAll(ASSETS)
         .then(() => {
-          // Cache remote fonts (best-effort, don't fail install if offline)
+          // Cache fonts best-effort
           return cache.addAll([
             'https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Fredoka+One&display=swap'
           ]).catch(() => {});
@@ -36,36 +35,32 @@ self.addEventListener('activate', event => {
   self.clients.claim();
 });
 
-// Fetch — cache-first for local assets, network-first for fonts
+// Fetch — cache-first for local, network-first for fonts
 self.addEventListener('fetch', event => {
   const url = new URL(event.request.url);
-
-  // Always use network for non-GET
   if (event.request.method !== 'GET') return;
 
-  // Cache-first strategy for same-origin assets
+  // Same-origin assets — cache first
   if (url.origin === self.location.origin) {
     event.respondWith(
       caches.match(event.request).then(cached => {
         if (cached) return cached;
         return fetch(event.request).then(response => {
           if (response && response.status === 200) {
-            const clone = response.clone();
-            caches.open(CACHE).then(cache => cache.put(event.request, clone));
+            caches.open(CACHE).then(cache => cache.put(event.request, response.clone()));
           }
           return response;
-        }).catch(() => caches.match('/index.html'));
+        }).catch(() => caches.match(BASE + '/index.html'));
       })
     );
     return;
   }
 
-  // Network-first for Google Fonts (fall back to cache if offline)
+  // Google Fonts — network first, cache fallback
   if (url.hostname.includes('fonts.googleapis.com') || url.hostname.includes('fonts.gstatic.com')) {
     event.respondWith(
       fetch(event.request).then(response => {
-        const clone = response.clone();
-        caches.open(CACHE).then(cache => cache.put(event.request, clone));
+        caches.open(CACHE).then(cache => cache.put(event.request, response.clone()));
         return response;
       }).catch(() => caches.match(event.request))
     );
