@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="My Money Jar">
+<meta name="theme-color" content="#0f0c29">
+<title>My Money Jar 🪙</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f0c29;
+    --bg2: #1a1744;
+    --gold: #FFD700;
+    --gold2: #FFA500;
+    --silver: #C0C0C0;
+    --green: #00e676;
+    --pink: #ff6b9d;
+    --blue: #4fc3f7;
+    --purple: #b39ddb;
+    --jar-save: #43e97b;
+    --jar-spend: #f093fb;
+    --text: #fff;
+    --text2: rgba(255,255,255,0.7);
+    --card: rgba(255,255,255,0.07);
+    --card-border: rgba(255,255,255,0.12);
+    --radius: 24px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  html, body {
+    height: 100%; height: 100dvh;
+    overflow: hidden;
+    background: var(--bg);
+    font-family: 'Nunito', sans-serif;
+    color: var(--text);
+    user-select: none;
+  }
+
+  body {
+    display: flex;
+    flex-direction: column;
+    background: radial-gradient(ellipse at top, #2d1b69 0%, #0f0c29 60%);
+  }
+
+  /* Stars background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      radial-gradient(1px 1px at 20% 30%, rgba(255,255,255,0.6) 0%, transparent 100%),
+      radial-gradient(1px 1px at 80% 10%, rgba(255,255,255,0.5) 0%, transparent 100%),
+      radial-gradient(1px 1px at 50% 60%, rgba(255,255,255,0.4) 0%, transparent 100%),
+      radial-gradient(1px 1px at 15% 80%, rgba(255,255,255,0.5) 0%, transparent 100%),
+      radial-gradient(1px 1px at 90% 70%, rgba(255,255,255,0.6) 0%, transparent 100%),
+      radial-gradient(1px 1px at 35% 15%, rgba(255,255,255,0.4) 0%, transparent 100%),
+      radial-gradient(1px 1px at 65% 85%, rgba(255,255,255,0.5) 0%, transparent 100%),
+      radial-gradient(2px 2px at 75% 40%, rgba(255,215,0,0.4) 0%, transparent 100%),
+      radial-gradient(2px 2px at 25% 55%, rgba(255,215,0,0.3) 0%, transparent 100%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  #app { position: relative; z-index: 1; display: flex; flex-direction: column; height: 100%; height: 100dvh; padding: 0; gap: 0; }
+
+  /* HEADER */
+  .header {
+    padding: 12px 16px 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
+  .header h1 {
+    font-family: 'Fredoka One', cursive;
+    font-size: 22px;
+    background: linear-gradient(135deg, var(--gold), var(--gold2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: 0.5px;
+  }
+  .header .sparkles { font-size: 22px; animation: spin 4s linear infinite; }
+  @keyframes spin { 0%,100%{transform:rotate(-10deg)} 50%{transform:rotate(10deg)} }
+
+  /* JARS ROW */
+  .jars-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    padding: 0 12px;
+    flex-shrink: 0;
+  }
+
+  .jar-card {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius);
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    position: relative;
+    overflow: hidden;
+  }
+  .jar-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius);
+    opacity: 0.08;
+  }
+  .jar-save::before { background: var(--jar-save); }
+  .jar-spend::before { background: var(--jar-spend); }
+
+  .jar-label {
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.8;
+  }
+  .jar-save .jar-label { color: var(--jar-save); }
+  .jar-spend .jar-label { color: var(--jar-spend); }
+
+  .jar-amount {
+    font-family: 'Fredoka One', cursive;
+    font-size: 28px;
+    line-height: 1;
+  }
+  .jar-save .jar-amount { color: var(--jar-save); }
+  .jar-spend .jar-amount { color: var(--jar-spend); }
+
+  .jar-visual {
+    width: 64px;
+    height: 54px;
+    position: relative;
+  }
+
+  /* SVG jar fill level */
+  .jar-svg { width: 100%; height: 100%; }
+
+  /* TOTAL BANNER */
+  .total-banner {
+    margin: 8px 12px 0;
+    background: linear-gradient(135deg, rgba(255,215,0,0.15), rgba(255,165,0,0.1));
+    border: 1px solid rgba(255,215,0,0.3);
+    border-radius: 16px;
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
+  .total-label { font-size: 12px; font-weight: 800; color: var(--gold); opacity: 0.85; text-transform: uppercase; letter-spacing: 1px; }
+  .total-amount { font-family: 'Fredoka One', cursive; font-size: 26px; color: var(--gold); }
+
+  /* COINS GRID */
+  .coins-section {
+    flex: 0 0 auto;
+    padding: 6px 12px 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .section-label {
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text2);
+    margin-bottom: 6px;
+  }
+  .coins-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    flex: 1;
+  }
+
+  .coin-tile {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 14px;
+    padding: 6px 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    transition: transform 0.1s;
+    cursor: pointer;
+  }
+  .coin-tile:active { transform: scale(0.95); }
+
+  .coin-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Fredoka One', cursive;
+    font-size: 10px;
+    font-weight: 900;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.4), inset 0 1px 2px rgba(255,255,255,0.3);
+    position: relative;
+    overflow: hidden;
+  }
+  .coin-icon::after {
+    content: '';
+    position: absolute;
+    top: 4px; left: 8px;
+    width: 10px; height: 6px;
+    background: rgba(255,255,255,0.3);
+    border-radius: 50%;
+    transform: rotate(-30deg);
+  }
+
+  .coin-5c  .coin-icon { background: linear-gradient(135deg, #b8b8b8, #d8d8d8, #a0a0a0); color: #555; }
+  .coin-10c .coin-icon { background: linear-gradient(135deg, #c0c0c0, #e0e0e0, #a8a8a8); color: #444; }
+  .coin-20c .coin-icon { background: linear-gradient(135deg, #c8c8c8, #e8e8e8, #b0b0b0); color: #333; }
+  .coin-50c .coin-icon { background: linear-gradient(135deg, #d0d0d0, #f0f0f0, #b8b8b8); color: #333; }
+  .coin-1   .coin-icon { background: linear-gradient(135deg, #d4af37, #f0c040, #c09030); color: #7a5200; }
+  .coin-2   .coin-icon { background: linear-gradient(135deg, #c8922a, #e8aa40, #b07820); color: #5a3000; }
+
+  /* $10 note tile — wider rectangle style */
+  .note-10 .coin-icon {
+    width: 48px !important;
+    height: 24px !important;
+    border-radius: 5px !important;
+    background: linear-gradient(135deg, #1a7a4a, #25a060, #148040);
+    color: #d4ffea;
+    font-size: 11px !important;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.5), inset 0 1px 2px rgba(255,255,255,0.25);
+    border: 1px solid rgba(255,255,255,0.15);
+  }
+  .note-10 .coin-icon::after {
+    width: 12px; height: 6px; top: 2px; left: 5px;
+  }
+
+  .coin-denom {
+    font-family: 'Fredoka One', cursive;
+    font-size: 12px;
+    color: var(--text2);
+  }
+  .coin-count {
+    font-family: 'Fredoka One', cursive;
+    font-size: 16px;
+    line-height: 1;
+    color: white;
+  }
+  .coin-total-val {
+    font-size: 9px;
+    color: var(--text2);
+    font-weight: 700;
+  }
+
+  /* +/- controls */
+  .coin-controls {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+  }
+  .btn-coin {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    border: none;
+    font-size: 14px;
+    font-weight: 900;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: transform 0.1s, opacity 0.1s;
+    line-height: 1;
+  }
+  .btn-coin:active { transform: scale(0.88); }
+  .btn-minus { background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.8); }
+  .btn-plus  { background: linear-gradient(135deg, var(--gold), var(--gold2)); color: #000; }
+
+  /* BOTTOM: JAR TOGGLE + HISTORY */
+  .bottom-bar {
+    padding: 8px 12px 12px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .jar-toggle {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background: rgba(255,255,255,0.06);
+    border-radius: 50px;
+    padding: 3px;
+    gap: 3px;
+  }
+  .jar-btn {
+    border: none;
+    border-radius: 50px;
+    padding: 8px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 13px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: transparent;
+    color: var(--text2);
+  }
+  .jar-btn.active-save {
+    background: linear-gradient(135deg, #1de9b6, #00e676);
+    color: #004d36;
+    box-shadow: 0 2px 12px rgba(0,230,118,0.4);
+  }
+  .jar-btn.active-spend {
+    background: linear-gradient(135deg, #f093fb, #f5576c);
+    color: white;
+    box-shadow: 0 2px 12px rgba(240,93,251,0.4);
+  }
+
+  /* TREND CHART */
+  .trend-section {
+    flex: 1;
+    padding: 6px 12px 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+  .trend-card {
+    flex: 1;
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 18px;
+    padding: 10px 12px 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-height: 0;
+  }
+  .trend-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .trend-label {
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text2);
+  }
+  .trend-latest {
+    font-family: 'Fredoka One', cursive;
+    font-size: 14px;
+    color: var(--gold);
+  }
+  #trend-svg {
+    flex: 1;
+    width: 100%;
+    min-height: 0;
+    overflow: visible;
+  }
+
+  /* Coin drop animation */
+  @keyframes coinDrop {
+    0%   { transform: translateY(-30px) scale(1.3); opacity: 0; }
+    60%  { transform: translateY(4px) scale(0.95); opacity: 1; }
+    80%  { transform: translateY(-3px) scale(1.02); }
+    100% { transform: translateY(0) scale(1); opacity: 1; }
+  }
+  .coin-tile.just-added .coin-icon {
+    animation: coinDrop 0.4s cubic-bezier(.17,.67,.35,1.2);
+  }
+
+  /* confetti burst */
+  .confetti {
+    position: fixed;
+    pointer-events: none;
+    z-index: 999;
+    top: 0; left: 0; right: 0; bottom: 0;
+  }
+
+  @keyframes floatUp {
+    0%   { transform: translateY(0) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(-80vh) rotate(720deg); opacity: 0; }
+  }
+
+  /* Backup button — subtle */
+  .backup-btn {
+    background: none;
+    border: 1px solid rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.4);
+    font-size: 18px;
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    line-height: 1;
+    letter-spacing: 1px;
+    transition: all 0.2s;
+    padding-bottom: 4px;
+  }
+  .backup-btn:active { color: rgba(255,255,255,0.8); border-color: rgba(255,255,255,0.4); transform: scale(0.92); }
+
+  /* Modal */
+  .modal-overlay {
+    display: none;
+    position: fixed; inset: 0; z-index: 9999;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(6px);
+    align-items: center; justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal-box {
+    background: #1a1744;
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 24px;
+    padding: 22px 20px 18px;
+    width: calc(100vw - 40px);
+    max-width: 360px;
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  .modal-title { font-family: 'Fredoka One', cursive; font-size: 18px; color: var(--gold); }
+  .modal-desc  { font-size: 12px; color: var(--text2); line-height: 1.5; }
+  .backup-textarea {
+    width: 100%; height: 90px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 12px;
+    color: white;
+    font-family: monospace;
+    font-size: 11px;
+    padding: 10px;
+    resize: none;
+    outline: none;
+  }
+  .modal-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .modal-btn {
+    border: none; border-radius: 12px;
+    padding: 10px 6px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 12px; font-weight: 800;
+    cursor: pointer; transition: transform 0.1s;
+  }
+  .modal-btn:active { transform: scale(0.95); }
+  .btn-export { background: rgba(255,215,0,0.15); color: var(--gold); border: 1px solid rgba(255,215,0,0.3); }
+  .btn-import { background: rgba(79,195,247,0.15); color: var(--blue); border: 1px solid rgba(79,195,247,0.3); }
+  .backup-msg { font-size: 11px; font-weight: 700; text-align: center; min-height: 16px; }
+  .backup-msg.ok  { color: var(--green); }
+  .backup-msg.err { color: #ff6b6b; }
+  .modal-close {
+    background: none; border: 1px solid rgba(255,255,255,0.12);
+    color: var(--text2); border-radius: 10px; padding: 7px;
+    font-size: 12px; font-weight: 700; cursor: pointer; width: 100%;
+  }
+
+  /* Reset */
+  .reset-divider { height: 1px; background: rgba(255,255,255,0.08); margin: 2px 0; }
+  .btn-reset { background: rgba(255,80,80,0.1); color: #ff6b6b; border: 1px solid rgba(255,80,80,0.25); width: 100%; }
+  .btn-reset:active { transform: scale(0.97); }
+
+  /* PIN pad */
+  .pin-section { display: flex; flex-direction: column; gap: 8px; align-items: center; }
+  .pin-label { font-size: 11px; font-weight: 800; color: var(--text2); letter-spacing: 0.5px; }
+  .pin-dots { display: flex; gap: 8px; align-items: center; justify-content: center; }
+  .pin-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+    border: 1.5px solid rgba(255,255,255,0.25);
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .pin-dot.filled { background: #ff6b6b; border-color: #ff6b6b; box-shadow: 0 0 6px rgba(255,80,80,0.5); }
+  @keyframes pinShake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-4px)} 60%{transform:translateX(4px)} }
+  .pin-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; width: 100%; }
+  .pin-key {
+    background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1);
+    color: white; font-family: "Fredoka One", cursive; font-size: 18px;
+    border-radius: 10px; padding: 9px 0; cursor: pointer;
+    transition: transform 0.1s, background 0.1s;
+  }
+  .pin-key:active { transform: scale(0.9); background: rgba(255,255,255,0.15); }
+  .pin-key-clear { color: #ff9999; font-family: "Nunito", sans-serif; font-size: 16px; }
+  .pin-key-ok { background: rgba(255,80,80,0.2); color: #ff6b6b; border-color: rgba(255,80,80,0.3); }
+
+  .streak-badge {
+    position: absolute;
+    top: 6px; right: 8px;
+    background: linear-gradient(135deg, var(--gold), var(--gold2));
+    color: #000;
+    font-size: 9px;
+    font-weight: 900;
+    padding: 2px 6px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+  }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>🪙 My Money Jar</h1>
+    <div style="display:flex;align-items:center;gap:10px">
+      <button class="backup-btn" onclick="openBackup()" title="Backup">⋯</button>
+      <span class="sparkles">✨</span>
+    </div>
+  </div>
+
+  <!-- BACKUP MODAL -->
+  <div id="backup-modal" class="modal-overlay" onclick="closeBackup()">
+    <div class="modal-box" onclick="event.stopPropagation()">
+      <div class="modal-title">🔒 Backup Data</div>
+      <div class="modal-desc">Copy your data to keep it safe. Paste it back anytime to restore.</div>
+      <textarea id="backup-text" class="backup-textarea" placeholder="Your backup code will appear here…" spellcheck="false"></textarea>
+      <div class="modal-actions">
+        <button class="modal-btn btn-export" onclick="doExport()">📋 Copy to Clipboard</button>
+        <button class="modal-btn btn-import" onclick="doImport()">📥 Restore from Text</button>
+      </div>
+      <div id="backup-msg" class="backup-msg"></div>
+
+      <!-- Reset section -->
+      <div class="reset-divider"></div>
+      <button class="modal-btn btn-reset" onclick="togglePinPad()">🗑️ Reset All Data</button>
+
+      <!-- PIN pad (hidden by default) -->
+      <div id="pin-section" class="pin-section" style="display:none">
+        <div class="pin-label">Enter passcode to reset</div>
+        <div class="pin-dots" id="pin-dots">
+          <span class="pin-dot" id="pd0"></span><span class="pin-dot" id="pd1"></span>
+          <span class="pin-dot" id="pd2"></span><span class="pin-dot" id="pd3"></span>
+          <span class="pin-dot" id="pd4"></span><span class="pin-dot" id="pd5"></span>
+          <span class="pin-dot" id="pd6"></span><span class="pin-dot" id="pd7"></span>
+        </div>
+        <div class="pin-grid">
+          <button class="pin-key" onclick="pinKey('1')">1</button>
+          <button class="pin-key" onclick="pinKey('2')">2</button>
+          <button class="pin-key" onclick="pinKey('3')">3</button>
+          <button class="pin-key" onclick="pinKey('4')">4</button>
+          <button class="pin-key" onclick="pinKey('5')">5</button>
+          <button class="pin-key" onclick="pinKey('6')">6</button>
+          <button class="pin-key" onclick="pinKey('7')">7</button>
+          <button class="pin-key" onclick="pinKey('8')">8</button>
+          <button class="pin-key" onclick="pinKey('9')">9</button>
+          <button class="pin-key pin-key-clear" onclick="pinClear()">⌫</button>
+          <button class="pin-key" onclick="pinKey('0')">0</button>
+          <button class="pin-key pin-key-ok" onclick="pinSubmit()">✓</button>
+        </div>
+        <div id="pin-msg" class="backup-msg"></div>
+      </div>
+
+      <button class="modal-close" onclick="closeBackup()">✕ Close</button>
+    </div>
+  </div>
+
+  <!-- JARS -->
+  <div class="jars-row">
+    <div class="jar-card jar-save">
+      <div class="jar-label">💚 Save</div>
+      <div class="jar-amount" id="save-total">S$0.00</div>
+      <div class="jar-visual">
+        <svg class="jar-svg" viewBox="0 0 64 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- jar outline -->
+          <path d="M18 8 Q18 4 22 4 L42 4 Q46 4 46 8 L48 14 Q52 16 52 20 L52 46 Q52 50 48 50 L16 50 Q12 50 12 46 L12 20 Q12 16 16 14 Z" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
+          <!-- fill (dynamic via clipPath) -->
+          <clipPath id="saveClip">
+            <rect x="12" y="50" width="40" height="0" id="saveFillRect"/>
+          </clipPath>
+          <path d="M18 8 Q18 4 22 4 L42 4 Q46 4 46 8 L48 14 Q52 16 52 20 L52 46 Q52 50 48 50 L16 50 Q12 50 12 46 L12 20 Q12 16 16 14 Z" fill="url(#saveGrad)" clip-path="url(#saveClip)"/>
+          <defs>
+            <linearGradient id="saveGrad" x1="0" y1="0" x2="0" y2="1" gradientUnits="objectBoundingBox">
+              <stop offset="0%" stop-color="#1de9b6"/>
+              <stop offset="100%" stop-color="#00e676"/>
+            </linearGradient>
+          </defs>
+          <!-- shine -->
+          <ellipse cx="23" cy="22" rx="3" ry="5" fill="rgba(255,255,255,0.15)" transform="rotate(-20 23 22)"/>
+        </svg>
+      </div>
+    </div>
+    <div class="jar-card jar-spend">
+      <div class="jar-label">💜 Spend</div>
+      <div class="jar-amount" id="spend-total">S$0.00</div>
+      <div class="jar-visual">
+        <svg class="jar-svg" viewBox="0 0 64 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M18 8 Q18 4 22 4 L42 4 Q46 4 46 8 L48 14 Q52 16 52 20 L52 46 Q52 50 48 50 L16 50 Q12 50 12 46 L12 20 Q12 16 16 14 Z" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
+          <clipPath id="spendClip">
+            <rect x="12" y="50" width="40" height="0" id="spendFillRect"/>
+          </clipPath>
+          <path d="M18 8 Q18 4 22 4 L42 4 Q46 4 46 8 L48 14 Q52 16 52 20 L52 46 Q52 50 48 50 L16 50 Q12 50 12 46 L12 20 Q12 16 16 14 Z" fill="url(#spendGrad)" clip-path="url(#spendClip)"/>
+          <defs>
+            <linearGradient id="spendGrad" x1="0" y1="0" x2="0" y2="1" gradientUnits="objectBoundingBox">
+              <stop offset="0%" stop-color="#f093fb"/>
+              <stop offset="100%" stop-color="#f5576c"/>
+            </linearGradient>
+          </defs>
+          <ellipse cx="23" cy="22" rx="3" ry="5" fill="rgba(255,255,255,0.15)" transform="rotate(-20 23 22)"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOTAL -->
+  <div class="total-banner">
+    <span class="total-label">⭐ Net Savings</span>
+    <span class="total-amount" id="grand-total">S$0.00</span>
+  </div>
+
+  <!-- COINS -->
+  <div class="coins-section">
+    <div class="section-label">Tap to add coins 👇</div>
+    <div class="coins-grid" id="coins-grid"></div>
+  </div>
+
+  <!-- TREND CHART -->
+  <div class="trend-section">
+    <div class="trend-card">
+      <div class="trend-header">
+        <span class="trend-label">📈 Weekly Savings</span>
+        <span class="trend-latest" id="trend-latest"></span>
+      </div>
+      <svg id="trend-svg" preserveAspectRatio="none"></svg>
+    </div>
+  </div>
+
+  <!-- BOTTOM BAR -->
+  <div class="bottom-bar">
+    <div class="jar-toggle">
+      <button class="jar-btn active-save" id="btn-save" onclick="setJar('save')">💚 Add to Save</button>
+      <button class="jar-btn" id="btn-spend" onclick="setJar('spend')">💜 Add to Spend</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ─── DATA ───────────────────────────────────────────────────────────────
+const COINS = [
+  { id: 'c10',  label: '10¢',  value: 0.10, cls: 'coin-10c' },
+  { id: 'c20',  label: '20¢',  value: 0.20, cls: 'coin-20c' },
+  { id: 'c50',  label: '50¢',  value: 0.50, cls: 'coin-50c' },
+  { id: 'c1',   label: '$1',   value: 1.00, cls: 'coin-1'   },
+  { id: 'c2',   label: '$2',   value: 2.00, cls: 'coin-2'   },
+  { id: 'n10',  label: '$10',  value: 10.00, cls: 'note-10' },
+];
+
+function loadState() {
+  const raw = localStorage.getItem('myjars_v2');
+  if (raw) return JSON.parse(raw);
+  return {
+    activeJar: 'save',
+    save:  { c10:0, c20:0, c50:0, c1:0, c2:0, n10:0 },
+    spend: { c10:0, c20:0, c50:0, c1:0, c2:0, n10:0 },
+    history: [] // [{date, saveTotal, spendTotal}]
+  };
+}
+
+function saveState() {
+  localStorage.setItem('myjars_v2', JSON.stringify(state));
+}
+
+// ─── SEED DATA ───────────────────────────────────────────────────────────
+function seedIfEmpty() {
+  const existing = localStorage.getItem('myjars_v2');
+  if (existing) {
+    // Also check if all coins are zero (fresh install with empty state)
+    try {
+      const parsed = JSON.parse(existing);
+      const allZero = ['c10','c20','c50','c1','c2','n10'].every(k =>
+        (parsed.save[k]||0) === 0 && (parsed.spend[k]||0) === 0
+      ) && (!parsed.history || parsed.history.length === 0);
+      if (!allZero) return; // has real data, don't overwrite
+    } catch(e) { return; }
+  }
+
+  const jan = { c10:15, c20:12, c50:8, c1:2, c2:2, n10:1 };
+  const feb = { c10:30, c20:24, c50:7, c1:4, c2:4, n10:3 };
+
+  function jarTotal(coins) {
+    return coins.c10*0.10 + coins.c20*0.20 + coins.c50*0.50 + coins.c1*1 + coins.c2*2 + coins.n10*10;
+  }
+
+  const janSave  = parseFloat(jarTotal(jan).toFixed(2));
+  const febSave  = parseFloat(jarTotal(feb).toFixed(2));
+
+  const seeded = {
+    activeJar: 'save',
+    save:  feb,   // current counts = Feb
+    spend: { c10:0, c20:0, c50:0, c1:0, c2:0, n10:0 },
+    history: [
+      { date: '1 Jan', save: janSave,  spend: 0 },
+      { date: '8 Jan', save: janSave,  spend: 0 },
+      { date: '15 Jan', save: janSave, spend: 0 },
+      { date: '22 Jan', save: janSave, spend: 0 },
+      { date: '1 Feb', save: febSave,  spend: 0 },
+      { date: '8 Feb', save: febSave,  spend: 0 },
+      { date: '15 Feb', save: febSave, spend: 0 },
+      { date: '22 Feb', save: febSave, spend: 0 },
+    ]
+  };
+  localStorage.setItem('myjars_v2', JSON.stringify(seeded));
+}
+seedIfEmpty();
+
+let state = loadState();
+
+// ─── JAR TOGGLE ──────────────────────────────────────────────────────────
+function setJar(jar) {
+  state.activeJar = jar;
+  document.getElementById('btn-save').className = 'jar-btn' + (jar==='save' ? ' active-save' : '');
+  document.getElementById('btn-spend').className = 'jar-btn' + (jar==='spend' ? ' active-spend' : '');
+  saveState();
+}
+
+// ─── COIN TILES ──────────────────────────────────────────────────────────
+function buildGrid() {
+  const grid = document.getElementById('coins-grid');
+  grid.innerHTML = '';
+  COINS.forEach(coin => {
+    const tile = document.createElement('div');
+    tile.className = `coin-tile ${coin.cls}`;
+    tile.id = `tile-${coin.id}`;
+    tile.innerHTML = `
+      <div class="coin-icon">${coin.label}</div>
+      <div class="coin-count" id="cnt-${coin.id}">0</div>
+      <div class="coin-total-val" id="val-${coin.id}">S$0.00</div>
+      <div class="coin-controls">
+        <button class="btn-coin btn-minus" onclick="changeCoin('${coin.id}', -1, event)">−</button>
+        <button class="btn-coin btn-plus"  onclick="changeCoin('${coin.id}', +1, event)">+</button>
+      </div>
+    `;
+    grid.appendChild(tile);
+  });
+}
+
+function changeCoin(id, delta, e) {
+  e.stopPropagation();
+  const jar = state.activeJar;
+  const coin = COINS.find(c => c.id === id);
+  const current = state[jar][id] || 0;
+  const next = Math.max(0, current + delta);
+  if (next === current) return;
+  state[jar][id] = next;
+
+  if (delta > 0) {
+    // animate
+    const tile = document.getElementById(`tile-${id}`);
+    tile.classList.remove('just-added');
+    void tile.offsetWidth;
+    tile.classList.add('just-added');
+    setTimeout(() => tile.classList.remove('just-added'), 500);
+    // confetti for big milestones
+    const total = Math.max(0, calcJarTotal('save') - calcJarTotal('spend'));
+    if (Math.floor(total) > Math.floor(total - coin.value)) confettiBurst();
+  }
+
+  saveState();
+  recordHistory();
+  render();
+}
+
+// ─── CALC ─────────────────────────────────────────────────────────────────
+function calcJarTotal(jar) {
+  return COINS.reduce((sum, c) => sum + (state[jar][c.id] || 0) * c.value, 0);
+}
+
+function fmt(n) { return 'S$' + n.toFixed(2); }
+
+// ─── RENDER ──────────────────────────────────────────────────────────────
+function render() {
+  const saveTotal  = calcJarTotal('save');
+  const spendTotal = calcJarTotal('spend');
+  const grand = Math.max(0, saveTotal - spendTotal);
+
+  document.getElementById('save-total').textContent  = fmt(saveTotal);
+  document.getElementById('spend-total').textContent = fmt(spendTotal);
+  document.getElementById('grand-total').textContent = fmt(grand);
+
+  // jar fill level (max visual = S$50)
+  const MAX = 50;
+  setJarFill('saveFillRect',  saveTotal,  MAX);
+  setJarFill('spendFillRect', spendTotal, MAX);
+
+  // coins
+  const jar = state.activeJar;
+  COINS.forEach(coin => {
+    const cnt = state[jar][coin.id] || 0;
+    document.getElementById(`cnt-${coin.id}`).textContent = cnt;
+    document.getElementById(`val-${coin.id}`).textContent = fmt(cnt * coin.value);
+  });
+
+  // history
+  renderTrend();
+}
+
+function setJarFill(rectId, total, max) {
+  const rect = document.getElementById(rectId);
+  if (!rect) return;
+  const pct = Math.min(total / max, 1);
+  const jarHeight = 36; // approx inner height in SVG units
+  const fillH = pct * jarHeight;
+  const y = 50 - fillH;
+  rect.setAttribute('y', y);
+  rect.setAttribute('height', fillH);
+}
+
+// ─── HISTORY ─────────────────────────────────────────────────────────────
+function recordHistory() {
+  const saveTotal  = calcJarTotal('save');
+  const spendTotal = calcJarTotal('spend');
+  const today = new Date().toLocaleDateString('en-SG', {day:'numeric', month:'short'});
+  const last = state.history[state.history.length - 1];
+  if (last && last.date === today) {
+    last.save  = saveTotal;
+    last.spend = spendTotal;
+  } else {
+    state.history.push({ date: today, save: saveTotal, spend: spendTotal });
+    if (state.history.length > 10) state.history.shift();
+  }
+  saveState();
+}
+
+function renderTrend() {
+  const svg = document.getElementById('trend-svg');
+  const latestEl = document.getElementById('trend-latest');
+
+  // Aggregate history into weekly buckets
+  const weekly = aggregateWeekly(state.history);
+
+  // Always show at least today's current total as last point
+  const saveTotal  = calcJarTotal('save');
+  const spendTotal = calcJarTotal('spend');
+  const grand = Math.max(0, saveTotal - spendTotal);
+  const todayLabel = new Date().toLocaleDateString('en-SG', {day:'numeric', month:'short'});
+
+  if (weekly.length === 0 || weekly[weekly.length-1].label !== todayLabel) {
+    weekly.push({ label: todayLabel, total: grand });
+  } else {
+    weekly[weekly.length-1].total = grand;
+  }
+
+  latestEl.textContent = fmt(grand);
+
+  if (weekly.length < 2) {
+    svg.innerHTML = `<text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle"
+      fill="rgba(255,255,255,0.25)" font-family="Nunito,sans-serif" font-size="11" font-weight="700">
+      Keep saving to see your trend! 🌱</text>`;
+    return;
+  }
+
+  // Get SVG dimensions
+  const W = svg.clientWidth  || 280;
+  const H = svg.clientHeight || 70;
+  const PAD_L = 28, PAD_R = 8, PAD_T = 10, PAD_B = 20;
+  const W2 = W - PAD_L - PAD_R;
+  const H2 = H - PAD_T - PAD_B;
+
+  const vals = weekly.map(w => w.total);
+  const minV = Math.min(...vals);
+  const maxV = Math.max(...vals);
+  const range = maxV - minV || 1;
+
+  const pts = weekly.map((w, i) => ({
+    x: PAD_L + (i / (weekly.length - 1)) * W2,
+    y: PAD_T + H2 - ((w.total - minV) / range) * H2,
+    label: w.label,
+    total: w.total
+  }));
+
+  // Area fill path
+  const linePts = pts.map(p => `${p.x},${p.y}`).join(' ');
+  const areaPath = `M${pts[0].x},${pts[0].y} ` +
+    pts.slice(1).map((p,i) => {
+      const prev = pts[i];
+      const cx = (prev.x + p.x) / 2;
+      return `C${cx},${prev.y} ${cx},${p.y} ${p.x},${p.y}`;
+    }).join(' ') +
+    ` L${pts[pts.length-1].x},${PAD_T+H2} L${pts[0].x},${PAD_T+H2} Z`;
+
+  const linePath = `M${pts[0].x},${pts[0].y} ` +
+    pts.slice(1).map((p,i) => {
+      const prev = pts[i];
+      const cx = (prev.x + p.x) / 2;
+      return `C${cx},${prev.y} ${cx},${p.y} ${p.x},${p.y}`;
+    }).join(' ');
+
+  // X-axis labels (show first, middle, last)
+  const labelIdxs = [0, Math.floor((weekly.length-1)/2), weekly.length-1];
+  const xlabels = [...new Set(labelIdxs)].map(i =>
+    `<text x="${pts[i].x}" y="${H-3}" text-anchor="middle"
+      fill="rgba(255,255,255,0.35)" font-family="Nunito,sans-serif" font-size="8" font-weight="700">${weekly[i].label}</text>`
+  ).join('');
+
+  // Y-axis labels
+  const ymid = (minV + maxV) / 2;
+  const ylabels = [minV, maxV].map((v, i) => {
+    const y = i === 0 ? PAD_T + H2 : PAD_T;
+    return `<text x="${PAD_L - 3}" y="${y}" text-anchor="end" dominant-baseline="middle"
+      fill="rgba(255,255,255,0.3)" font-family="Nunito,sans-serif" font-size="8" font-weight="700">$${v.toFixed(0)}</text>`;
+  }).join('');
+
+  // Last point highlight dot
+  const last = pts[pts.length - 1];
+  const dotGlow = `<circle cx="${last.x}" cy="${last.y}" r="6" fill="rgba(255,215,0,0.15)"/>
+    <circle cx="${last.x}" cy="${last.y}" r="3.5" fill="#FFD700"/>`;
+
+  svg.innerHTML = `
+    <defs>
+      <linearGradient id="trendGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="rgba(255,215,0,0.35)"/>
+        <stop offset="100%" stop-color="rgba(255,215,0,0.0)"/>
+      </linearGradient>
+    </defs>
+    <!-- grid line -->
+    <line x1="${PAD_L}" y1="${PAD_T + H2}" x2="${PAD_L + W2}" y2="${PAD_T + H2}"
+      stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+    <line x1="${PAD_L}" y1="${PAD_T}" x2="${PAD_L + W2}" y2="${PAD_T}"
+      stroke="rgba(255,255,255,0.05)" stroke-width="1" stroke-dasharray="3,3"/>
+    <!-- area -->
+    <path d="${areaPath}" fill="url(#trendGrad)"/>
+    <!-- line -->
+    <path d="${linePath}" fill="none" stroke="#FFD700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- dots -->
+    ${pts.map(p => `<circle cx="${p.x}" cy="${p.y}" r="2" fill="rgba(255,215,0,0.6)"/>`).join('')}
+    ${dotGlow}
+    ${xlabels}
+    ${ylabels}
+  `;
+}
+
+function aggregateWeekly(history) {
+  if (!history.length) return [];
+  // Group by week (Sun–Sat), take last entry per week
+  const weeks = {};
+  history.forEach(h => {
+    const d = new Date(h.date + ' ' + new Date().getFullYear());
+    const day = d.getDay();
+    const weekStart = new Date(d);
+    weekStart.setDate(d.getDate() - day);
+    const key = weekStart.toISOString().slice(0, 10);
+    weeks[key] = { label: h.date, total: Math.max(0, (h.save || 0) - (h.spend || 0)) };
+  });
+  return Object.values(weeks);
+}
+
+// ─── CONFETTI ────────────────────────────────────────────────────────────
+function confettiBurst() {
+  const canvas = document.createElement('div');
+  canvas.className = 'confetti';
+  document.body.appendChild(canvas);
+  const colors = ['#FFD700','#FF6B9D','#4FC3F7','#00E676','#B39DDB','#FFA500'];
+  for (let i = 0; i < 18; i++) {
+    const p = document.createElement('div');
+    const size = 6 + Math.random() * 8;
+    p.style.cssText = `
+      position:absolute;
+      width:${size}px;height:${size}px;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      border-radius:${Math.random()>0.5?'50%':'3px'};
+      left:${20+Math.random()*60}%;
+      top:${40+Math.random()*20}%;
+      animation: floatUp ${0.8+Math.random()*0.6}s ease-out ${Math.random()*0.3}s forwards;
+    `;
+    canvas.appendChild(p);
+  }
+  setTimeout(() => canvas.remove(), 2000);
+}
+
+// ─── BACKUP / RESTORE ────────────────────────────────────────────────────
+function openBackup() {
+  document.getElementById('backup-text').value = localStorage.getItem('myjars_v2') || '';
+  document.getElementById('backup-msg').textContent = '';
+  document.getElementById('backup-modal').classList.add('open');
+}
+function closeBackup() {
+  document.getElementById('backup-modal').classList.remove('open');
+  // reset pin pad state
+  pinEntry = '';
+  const sec = document.getElementById('pin-section');
+  if (sec) sec.style.display = 'none';
+  updatePinDots();
+}
+function doExport() {
+  const text = localStorage.getItem('myjars_v2') || '';
+  if (!text) { showMsg('Nothing to export yet!', 'err'); return; }
+  document.getElementById('backup-text').value = text;
+  navigator.clipboard.writeText(text).then(() => {
+    showMsg('✅ Copied! Paste it into Notes to save.', 'ok');
+  }).catch(() => {
+    // clipboard not available — text is shown in textarea, user can copy manually
+    document.getElementById('backup-text').select();
+    showMsg('📋 Select all text above and copy manually.', 'ok');
+  });
+}
+function doImport() {
+  const text = document.getElementById('backup-text').value.trim();
+  if (!text) { showMsg('Paste your backup text first!', 'err'); return; }
+  try {
+    const parsed = JSON.parse(text);
+    if (!parsed.save || !parsed.spend) throw new Error();
+    localStorage.setItem('myjars_v2', text);
+    state = loadState();
+    render();
+    setJar(state.activeJar);
+    showMsg('✅ Restored successfully!', 'ok');
+    setTimeout(closeBackup, 1200);
+  } catch(e) {
+    showMsg('❌ Invalid backup text. Try again.', 'err');
+  }
+}
+function showMsg(msg, type) {
+  const el = document.getElementById('backup-msg');
+  el.textContent = msg;
+  el.className = 'backup-msg ' + type;
+}
+
+// ─── RESET / PIN ──────────────────────────────────────────────────────────
+const PASSCODE = '65224488';
+let pinEntry = '';
+
+function togglePinPad() {
+  const sec = document.getElementById('pin-section');
+  const visible = sec.style.display !== 'none';
+  sec.style.display = visible ? 'none' : 'flex';
+  pinEntry = '';
+  updatePinDots();
+  document.getElementById('pin-msg').textContent = '';
+}
+
+function pinKey(digit) {
+  if (pinEntry.length >= 8) return;
+  pinEntry += digit;
+  updatePinDots();
+}
+
+function pinClear() {
+  pinEntry = pinEntry.slice(0, -1);
+  updatePinDots();
+}
+
+function updatePinDots() {
+  for (let i = 0; i < 8; i++) {
+    const dot = document.getElementById('pd' + i);
+    dot.classList.toggle('filled', i < pinEntry.length);
+  }
+}
+
+function pinSubmit() {
+  if (pinEntry === PASSCODE) {
+    localStorage.removeItem('myjars_v2');
+    state = loadState();
+    render();
+    setJar('save');
+    document.getElementById('backup-text').value = '';
+    document.getElementById('pin-msg').textContent = '';
+    showMsg('All data has been reset.', 'ok');
+    setTimeout(closeBackup, 1400);
+  } else {
+    pinEntry = '';
+    updatePinDots();
+    const dots = document.querySelectorAll('.pin-dot');
+    dots.forEach(d => {
+      d.style.animation = 'none';
+      void d.offsetWidth;
+      d.style.animation = 'pinShake 0.35s ease';
+    });
+    const msgEl = document.getElementById('pin-msg');
+    msgEl.textContent = 'Wrong passcode';
+    msgEl.className = 'backup-msg err';
+    setTimeout(() => { msgEl.textContent = ''; }, 1500);
+  }
+}
+
+// ─── INIT ─────────────────────────────────────────────────────────────────
+buildGrid();
+setJar(state.activeJar);
+render();
+
+// ─── SERVICE WORKER ───────────────────────────────────────────────────────
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(err => console.log('SW reg failed:', err));
+  });
+}
+</script>
+</body>
+</html>
