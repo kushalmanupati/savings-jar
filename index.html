@@ -292,7 +292,7 @@
 
   .jar-toggle {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(3, 1fr);
     background: rgba(255,255,255,0.06);
     border-radius: 50px;
     padding: 3px;
@@ -301,9 +301,9 @@
   .jar-btn {
     border: none;
     border-radius: 50px;
-    padding: 8px;
+    padding: 8px 4px;
     font-family: 'Nunito', sans-serif;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 800;
     cursor: pointer;
     transition: all 0.2s;
@@ -319,6 +319,11 @@
     background: linear-gradient(135deg, #f093fb, #f5576c);
     color: white;
     box-shadow: 0 2px 12px rgba(240,93,251,0.4);
+  }
+  .jar-btn.active-helped {
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    color: #5a3000;
+    box-shadow: 0 2px 12px rgba(255,215,0,0.4);
   }
 
   /* TREND CHART */
@@ -363,6 +368,39 @@
     min-height: 0;
     overflow: visible;
   }
+
+  /* I HELPED SECTION */
+  .helped-section {
+    flex: 1;
+    padding: 6px 12px 0;
+    display: none; /* hidden by default */
+    flex-direction: column;
+    min-height: 0;
+  }
+  .helped-card {
+    flex: 1;
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 18px;
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+    min-height: 0;
+  }
+  .helped-input {
+    width: 100%;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 12px;
+    color: white;
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px;
+    padding: 10px 12px;
+    outline: none;
+  }
+  .helped-input::placeholder { color: rgba(255,255,255,0.3); }
 
   /* Coin drop animation */
   @keyframes coinDrop {
@@ -555,7 +593,7 @@
   <div id="approve-modal" class="modal-overlay" onclick="closeApprove()">
     <div class="modal-box" onclick="event.stopPropagation()">
       <div class="modal-title">🔒 Ask Mama/Papa</div>
-      <div class="modal-desc">Enter passcode to approve this coin change.</div>
+      <div class="modal-desc">Enter passcode to approve this addition.</div>
       <div class="pin-section">
         <div class="pin-dots" id="approve-pin-dots">
           <span class="pin-dot" id="apd0"></span>
@@ -636,7 +674,7 @@
     <div class="coins-grid" id="coins-grid"></div>
   </div>
 
-  <div class="trend-section">
+  <div class="trend-section" id="trend-section">
     <div class="trend-card">
       <div class="trend-header">
         <span class="trend-label">📈 Weekly Savings</span>
@@ -646,10 +684,30 @@
     </div>
   </div>
 
+  <div class="helped-section" id="helped-section">
+    <div class="helped-card">
+      <div style="font-size: 13px; font-weight: 800; color: var(--gold); letter-spacing: 0.5px; width: 100%;">I helped today, by:</div>
+      <input type="text" id="helped-text" class="helped-input" placeholder="e.g. washing the dishes" spellcheck="false">
+      
+      <div style="display: flex; align-items: center; justify-content: space-between; width: 100%; margin-top: 4px;">
+         <div style="display: flex; align-items: center; gap: 12px;">
+           <div class="coin-icon" style="background: linear-gradient(135deg, #d4af37, #f0c040, #c09030); color: #7a5200; width: 38px; height: 38px; font-size: 11px;">$1</div>
+           <div class="coin-controls">
+             <button class="btn-coin btn-minus" onclick="changeHelpedAmount(-1)">−</button>
+             <span id="helped-amount" style="font-family: 'Fredoka One'; font-size: 20px; width: 30px; text-align: center; color: white;">0</span>
+             <button class="btn-coin btn-plus" onclick="changeHelpedAmount(1)">+</button>
+           </div>
+         </div>
+         <button class="modal-btn" onclick="submitHelp()" style="background: linear-gradient(135deg, var(--gold), var(--gold2)); color: #5a3000; padding: 10px 24px; font-size: 13px; box-shadow: 0 4px 10px rgba(255,215,0,0.3);">Submit</button>
+      </div>
+    </div>
+  </div>
+
   <div class="bottom-bar">
     <div class="jar-toggle">
-      <button class="jar-btn active-save" id="btn-save" onclick="setJar('save')">💚 Add to Save</button>
-      <button class="jar-btn" id="btn-spend" onclick="setJar('spend')">💜 Add to Spend</button>
+      <button class="jar-btn active-save" id="btn-save" onclick="setTab('save')">💚 Save</button>
+      <button class="jar-btn" id="btn-spend" onclick="setTab('spend')">💜 Spend</button>
+      <button class="jar-btn" id="btn-helped" onclick="setTab('helped')">✅ I helped</button>
     </div>
   </div>
 
@@ -724,14 +782,30 @@ function seedIfEmpty() {
 seedIfEmpty();
 
 let state = loadState();
+let currentTab = state.activeJar;
 
-// ─── JAR TOGGLE ──────────────────────────────────────────────────────────
-function setJar(jar) {
-  state.activeJar = jar;
-  document.getElementById('btn-save').className = 'jar-btn' + (jar==='save' ? ' active-save' : '');
-  document.getElementById('btn-spend').className = 'jar-btn' + (jar==='spend' ? ' active-spend' : '');
-  saveState();
-  render();
+// ─── TAB TOGGLE ──────────────────────────────────────────────────────────
+function setTab(tab) {
+  currentTab = tab;
+  
+  // Update Buttons
+  document.getElementById('btn-save').className = 'jar-btn' + (tab==='save' ? ' active-save' : '');
+  document.getElementById('btn-spend').className = 'jar-btn' + (tab==='spend' ? ' active-spend' : '');
+  document.getElementById('btn-helped').className = 'jar-btn' + (tab==='helped' ? ' active-helped' : '');
+  
+  if (tab === 'save' || tab === 'spend') {
+    state.activeJar = tab;
+    document.getElementById('trend-section').style.display = 'flex';
+    document.getElementById('helped-section').style.display = 'none';
+    saveState();
+    render();
+  } else if (tab === 'helped') {
+    // When "I helped" is active, default visual coins jar above to 'save'
+    state.activeJar = 'save';
+    document.getElementById('trend-section').style.display = 'none';
+    document.getElementById('helped-section').style.display = 'flex';
+    render();
+  }
 }
 
 // ─── COIN TILES ──────────────────────────────────────────────────────────
@@ -780,9 +854,50 @@ function executeCoinChange(id, delta) {
   render();
 }
 
+// ─── I HELPED LOGIC ──────────────────────────────────────────────────────
+let helpedAmount = 0;
+
+function changeHelpedAmount(delta) {
+  helpedAmount = Math.max(0, helpedAmount + delta);
+  document.getElementById('helped-amount').textContent = helpedAmount;
+}
+
+function submitHelp() {
+  if (helpedAmount === 0) return; // Prevent submitting 0 amount
+  
+  const text = document.getElementById('helped-text').value.trim();
+  
+  approveAction = { type: 'help', amount: helpedAmount, text: text };
+  approveEntry = '';
+  updateApproveDots();
+  document.getElementById('approve-msg').textContent = '';
+  document.getElementById('approve-modal').classList.add('open');
+}
+
+function executeHelp(amount, text) {
+  // Add $1 coins to Save jar directly
+  const currentC1 = state.save['c1'] || 0;
+  state.save['c1'] = currentC1 + amount;
+  
+  saveState();
+  recordHistory();
+  
+  // Celebrate
+  confettiBurst();
+  
+  // Reset form
+  helpedAmount = 0;
+  document.getElementById('helped-amount').textContent = '0';
+  document.getElementById('helped-text').value = '';
+  
+  // Return to save tab
+  setTab('save');
+}
+
+
 // ─── APPROVAL PIN LOGIC ──────────────────────────────────────────────────
 const APPROVE_PIN = '2019';
-let pendingCoin = null;
+let approveAction = null; // Can hold a coin action OR help action
 let approveEntry = '';
 
 function askApproval(id, delta, e) {
@@ -791,7 +906,7 @@ function askApproval(id, delta, e) {
   const current = state[state.activeJar][id] || 0;
   if (delta < 0 && current === 0) return;
 
-  pendingCoin = { id, delta };
+  approveAction = { type: 'coin', id, delta };
   approveEntry = '';
   updateApproveDots();
   document.getElementById('approve-msg').textContent = '';
@@ -800,7 +915,7 @@ function askApproval(id, delta, e) {
 
 function closeApprove() {
   document.getElementById('approve-modal').classList.remove('open');
-  pendingCoin = null;
+  approveAction = null;
 }
 
 function apprKey(digit) {
@@ -828,8 +943,10 @@ function updateApproveDots() {
 
 function apprSubmit() {
   if (approveEntry === APPROVE_PIN) {
-    if (pendingCoin) {
-      executeCoinChange(pendingCoin.id, pendingCoin.delta);
+    if (approveAction && approveAction.type === 'coin') {
+      executeCoinChange(approveAction.id, approveAction.delta);
+    } else if (approveAction && approveAction.type === 'help') {
+      executeHelp(approveAction.amount, approveAction.text);
     }
     closeApprove();
   } else {
@@ -1085,8 +1202,7 @@ function doImport() {
     if (!parsed.save || !parsed.spend) throw new Error();
     localStorage.setItem('myjars_v2', text);
     state = loadState();
-    render();
-    setJar(state.activeJar);
+    setTab(state.activeJar); // render happens here
     showMsg('✅ Restored successfully!', 'ok');
     setTimeout(closeBackup, 1200);
   } catch(e) {
@@ -1134,8 +1250,7 @@ function pinSubmit() {
   if (pinEntry === PASSCODE) {
     localStorage.removeItem('myjars_v2');
     state = loadState();
-    render();
-    setJar('save');
+    setTab('save');
     document.getElementById('backup-text').value = '';
     document.getElementById('pin-msg').textContent = '';
     showMsg('All data has been reset.', 'ok');
@@ -1158,8 +1273,7 @@ function pinSubmit() {
 
 // ─── INIT ─────────────────────────────────────────────────────────────────
 buildGrid();
-setJar(state.activeJar);
-render();
+setTab(state.activeJar);
 
 // ─── SERVICE WORKER ───────────────────────────────────────────────────────
 if ('serviceWorker' in navigator) {
