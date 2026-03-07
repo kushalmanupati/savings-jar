@@ -228,7 +228,7 @@
   .coin-1   .coin-icon { background: linear-gradient(135deg, #d4af37, #f0c040, #c09030); color: #7a5200; }
   .coin-2   .coin-icon { background: linear-gradient(135deg, #c8922a, #e8aa40, #b07820); color: #5a3000; }
 
-  /* $10 note tile — wider rectangle style */
+  /* $10 note tile */
   .note-10 .coin-icon {
     width: 48px !important;
     height: 24px !important;
@@ -281,7 +281,7 @@
   .btn-minus { background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.8); }
   .btn-plus  { background: linear-gradient(135deg, var(--gold), var(--gold2)); color: #000; }
 
-  /* BOTTOM: JAR TOGGLE + HISTORY */
+  /* BOTTOM: TAB TOGGLE */
   .bottom-bar {
     padding: 8px 12px 12px;
     flex-shrink: 0;
@@ -292,7 +292,7 @@
 
   .jar-toggle {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(4, 1fr);
     background: rgba(255,255,255,0.06);
     border-radius: 50px;
     padding: 3px;
@@ -301,9 +301,9 @@
   .jar-btn {
     border: none;
     border-radius: 50px;
-    padding: 8px;
+    padding: 8px 4px;
     font-family: 'Nunito', sans-serif;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 800;
     cursor: pointer;
     transition: all 0.2s;
@@ -320,15 +320,79 @@
     color: white;
     box-shadow: 0 2px 12px rgba(240,93,251,0.4);
   }
+  .jar-btn.active-helped {
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    color: #5a3000;
+    box-shadow: 0 2px 12px rgba(255,215,0,0.4);
+  }
+  
+  /* NEW: INVEST TAB STYLES */
+  .jar-btn.active-invest {
+    background: linear-gradient(135deg, #4fc3f7, #0288d1);
+    color: white;
+    box-shadow: 0 2px 12px rgba(79,195,247,0.4);
+  }
+  .stock-card {
+    background: var(--card); border: 1px solid var(--card-border);
+    border-radius: 16px; padding: 12px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .stock-info { display: flex; align-items: center; gap: 10px; }
+  .stock-icon { font-size: 24px; background: rgba(255,255,255,0.1); width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 12px; }
+  .stock-name { font-family: 'Fredoka One', cursive; font-size: 14px; color: white; }
+  .stock-price { font-size: 12px; font-weight: 800; color: var(--text2); }
+  .stock-change.up { color: var(--green); }
+  .stock-change.down { color: #ff6b6b; }
+  .stock-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+  .stock-shares { font-size: 11px; font-weight: 800; color: var(--gold); background: rgba(255,215,0,0.1); padding: 2px 8px; border-radius: 8px;}
+  .btn-trade { background: rgba(255,255,255,0.1); border: none; color: white; padding: 6px 16px; border-radius: 8px; font-family: 'Fredoka One'; font-size: 11px; cursor: pointer; transition: transform 0.1s;}
+  .btn-trade:active { transform: scale(0.9); }
 
-  /* TREND CHART */
-  .trend-section {
+  /* SWIPEABLE CAROUSEL (CHART & HISTORY) */
+  .carousel-section {
     flex: 1;
-    padding: 6px 12px 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    padding-top: 6px;
+  }
+  .carousel-viewport {
+    flex: 1;
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE/Edge */
+    min-height: 0;
+  }
+  .carousel-viewport::-webkit-scrollbar { display: none; }
+  
+  .carousel-slide {
+    flex: 0 0 100%;
+    scroll-snap-align: center;
+    padding: 0 12px;
     display: flex;
     flex-direction: column;
     min-height: 0;
   }
+
+  .carousel-dots {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 6px;
+    margin-bottom: 2px;
+  }
+  .carousel-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+    transition: background 0.2s, transform 0.2s;
+  }
+  .carousel-dot.active {
+    background: var(--gold);
+    transform: scale(1.2);
+  }
+
   .trend-card {
     flex: 1;
     background: var(--card);
@@ -364,6 +428,80 @@
     overflow: visible;
   }
 
+  /* HISTORY LIST UI */
+  .help-list {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 4px;
+    padding-bottom: 4px;
+  }
+  .help-list::-webkit-scrollbar { display: none; }
+  .help-item {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 8px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+  .help-date {
+    font-size: 9px;
+    font-weight: 800;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .help-text {
+    font-size: 13px;
+    color: white;
+    line-height: 1.3;
+  }
+  .help-empty {
+    text-align: center;
+    color: rgba(255,255,255,0.4);
+    font-size: 11px;
+    font-weight: 700;
+    margin-top: 20px;
+    line-height: 1.5;
+  }
+
+  /* I HELPED SECTION (REPLACES CAROUSEL) */
+  .helped-section {
+    flex: 1;
+    padding: 6px 12px 0;
+    display: none; /* hidden by default */
+    flex-direction: column;
+    min-height: 0;
+  }
+  .helped-card {
+    flex: 1;
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 18px;
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+    min-height: 0;
+  }
+  .helped-input {
+    width: 100%;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 12px;
+    color: white;
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px;
+    padding: 10px 12px;
+    outline: none;
+  }
+  .helped-input::placeholder { color: rgba(255,255,255,0.3); }
+
   /* Coin drop animation */
   @keyframes coinDrop {
     0%   { transform: translateY(-30px) scale(1.3); opacity: 0; }
@@ -388,24 +526,7 @@
     100% { transform: translateY(-80vh) rotate(720deg); opacity: 0; }
   }
 
-  /* Backup button — subtle */
-  .backup-btn {
-    background: none;
-    border: 1px solid rgba(255,255,255,0.15);
-    color: rgba(255,255,255,0.4);
-    font-size: 18px;
-    width: 30px; height: 30px;
-    border-radius: 50%;
-    cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    line-height: 1;
-    letter-spacing: 1px;
-    transition: all 0.2s;
-    padding-bottom: 4px;
-  }
-  .backup-btn:active { color: rgba(255,255,255,0.8); border-color: rgba(255,255,255,0.4); transform: scale(0.92); }
-
-  /* Modal */
+  /* Modal Styles */
   .modal-overlay {
     display: none;
     position: fixed; inset: 0; z-index: 9999;
@@ -457,7 +578,6 @@
     font-size: 12px; font-weight: 700; cursor: pointer; width: 100%;
   }
 
-  /* Reset */
   .reset-divider { height: 1px; background: rgba(255,255,255,0.08); margin: 2px 0; }
   .btn-reset { background: rgba(255,80,80,0.1); color: #ff6b6b; border: 1px solid rgba(255,80,80,0.25); width: 100%; }
   .btn-reset:active { transform: scale(0.97); }
@@ -484,18 +604,6 @@
   .pin-key:active { transform: scale(0.9); background: rgba(255,255,255,0.15); }
   .pin-key-clear { color: #ff9999; font-family: "Nunito", sans-serif; font-size: 16px; }
   .pin-key-ok { background: rgba(255,80,80,0.2); color: #ff6b6b; border-color: rgba(255,80,80,0.3); }
-
-  .streak-badge {
-    position: absolute;
-    top: 6px; right: 8px;
-    background: linear-gradient(135deg, var(--gold), var(--gold2));
-    color: #000;
-    font-size: 9px;
-    font-weight: 900;
-    padding: 2px 6px;
-    border-radius: 20px;
-    letter-spacing: 0.5px;
-  }
 </style>
 </head>
 <body>
@@ -504,7 +612,7 @@
   <div class="header">
     <h1>🪙 My Money Jar</h1>
     <div style="display:flex;align-items:center;gap:10px">
-      <button class="backup-btn" onclick="openBackup()" title="Backup">⋯</button>
+      <button class="backup-btn" style="background: none; border: none; color: white; font-size: 20px;" onclick="openBackup()" title="Backup">⋯</button>
       <span class="sparkles">✨</span>
     </div>
   </div>
@@ -555,7 +663,7 @@
   <div id="approve-modal" class="modal-overlay" onclick="closeApprove()">
     <div class="modal-box" onclick="event.stopPropagation()">
       <div class="modal-title">🔒 Ask Mama/Papa</div>
-      <div class="modal-desc">Enter passcode to approve this coin change.</div>
+      <div class="modal-desc">Enter passcode to approve this addition.</div>
       <div class="pin-section">
         <div class="pin-dots" id="approve-pin-dots">
           <span class="pin-dot" id="apd0"></span>
@@ -636,27 +744,78 @@
     <div class="coins-grid" id="coins-grid"></div>
   </div>
 
-  <div class="trend-section">
-    <div class="trend-card">
-      <div class="trend-header">
-        <span class="trend-label">📈 Weekly Savings</span>
-        <span class="trend-latest" id="trend-latest"></span>
+  <div class="carousel-section" id="carousel-section">
+    <div class="carousel-viewport" id="carousel-viewport" onscroll="updateDots()">
+      
+      <div class="carousel-slide">
+        <div class="trend-card">
+          <div class="trend-header">
+            <span class="trend-label">📈 Weekly Savings</span>
+            <span class="trend-latest" id="trend-latest"></span>
+          </div>
+          <svg id="trend-svg" preserveAspectRatio="none"></svg>
+        </div>
       </div>
-      <svg id="trend-svg" preserveAspectRatio="none"></svg>
+
+      <div class="carousel-slide">
+        <div class="trend-card">
+          <div class="trend-header">
+            <span class="trend-label">⭐ Helping History</span>
+          </div>
+          <div class="help-list" id="help-list">
+            </div>
+        </div>
+      </div>
+
     </div>
+    
+    <div class="carousel-dots">
+      <div class="carousel-dot active" id="dot-1"></div>
+      <div class="carousel-dot" id="dot-2"></div>
+    </div>
+  </div>
+
+  <div class="helped-section" id="helped-section">
+    <div class="helped-card">
+      <div style="font-size: 13px; font-weight: 800; color: var(--gold); letter-spacing: 0.5px; width: 100%;">I helped today, by:</div>
+      <input type="text" id="helped-text" class="helped-input" placeholder="e.g. washing the dishes" spellcheck="false">
+      
+      <div style="display: flex; align-items: center; justify-content: space-between; width: 100%; margin-top: 4px;">
+         <div style="display: flex; align-items: center; gap: 12px;">
+           <div class="coin-icon" style="background: linear-gradient(135deg, #d4af37, #f0c040, #c09030); color: #7a5200; width: 38px; height: 38px; font-size: 11px;">$1</div>
+           <div class="coin-controls">
+             <button class="btn-coin btn-minus" onclick="changeHelpedAmount(-1)">−</button>
+             <span id="helped-amount" style="font-family: 'Fredoka One'; font-size: 20px; width: 30px; text-align: center; color: white;">0</span>
+             <button class="btn-coin btn-plus" onclick="changeHelpedAmount(1)">+</button>
+           </div>
+         </div>
+         <button class="modal-btn" onclick="submitHelp()" style="background: linear-gradient(135deg, var(--gold), var(--gold2)); color: #5a3000; padding: 10px 24px; font-size: 13px; box-shadow: 0 4px 10px rgba(255,215,0,0.3);">Submit</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="invest-section" id="invest-section" style="display: none; flex: 1; padding: 6px 12px 0; flex-direction: column; min-height: 0;">
+    <div class="total-banner" style="margin: 0 0 10px 0; background: linear-gradient(135deg, rgba(79,195,247,0.15), rgba(79,195,247,0.05)); border-color: rgba(79,195,247,0.3);">
+      <span class="total-label" style="color: var(--blue);">📈 Portfolio Value</span>
+      <span class="total-amount" id="portfolio-total" style="color: var(--blue);">S$0.00</span>
+    </div>
+    <div style="flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; padding-bottom: 8px;" id="market-grid">
+      </div>
   </div>
 
   <div class="bottom-bar">
     <div class="jar-toggle">
-      <button class="jar-btn active-save" id="btn-save" onclick="setJar('save')">💚 Add to Save</button>
-      <button class="jar-btn" id="btn-spend" onclick="setJar('spend')">💜 Add to Spend</button>
+      <button class="jar-btn active-save" id="btn-save" onclick="setTab('save')">💚 Save</button>
+      <button class="jar-btn" id="btn-spend" onclick="setTab('spend')">💜 Spend</button>
+      <button class="jar-btn" id="btn-helped" onclick="setTab('helped')">✅ Helped</button>
+      <button class="jar-btn" id="btn-invest" onclick="setTab('invest')">📈 Invest</button>
     </div>
   </div>
 
 </div>
 
 <script>
-// ─── DATA ───────────────────────────────────────────────────────────────
+// ─── DATA & MARKET CONFIG ───────────────────────────────────────────────
 const COINS = [
   { id: 'c10',  label: '10¢',  value: 0.10, cls: 'coin-10c' },
   { id: 'c20',  label: '20¢',  value: 0.20, cls: 'coin-20c' },
@@ -666,14 +825,36 @@ const COINS = [
   { id: 'n10',  label: '$10',  value: 10.00, cls: 'note-10' },
 ];
 
+const STOCKS = {
+  LGO:  { id: 'LGO',  name: 'Lego',      base: 5.00,  div: 0.10, vol: 0.04, icon: '🧱' }, // Safe, reliable dividend
+  NASA: { id: 'NASA', name: 'NASA',      base: 10.00, div: 0.00, vol: 0.15, icon: '🚀' }, // High risk, high reward, no dividend
+  MCFT: { id: 'MCFT', name: 'Minecraft', base: 8.00,  div: 0.05, vol: 0.08, icon: '⛏️' }  // Medium risk
+};
+
+function getWeekString() {
+  const d = new Date(); return `${d.getFullYear()}-${Math.ceil(d.getDate() / 7)}-${d.getMonth()}`;
+}
+
 function loadState() {
   const raw = localStorage.getItem('myjars_v2');
-  if (raw) return JSON.parse(raw);
+  if (raw) {
+      let parsed = JSON.parse(raw);
+      // Migrate old data to include new stock features
+      if (!parsed.portfolio) parsed.portfolio = { LGO: 0, NASA: 0, MCFT: 0 };
+      if (!parsed.prices) parsed.prices = { LGO: 5.00, NASA: 10.00, MCFT: 8.00 };
+      if (!parsed.lastMarketWeek) parsed.lastMarketWeek = getWeekString();
+      if (!parsed.helpHistory) parsed.helpHistory = [];
+      return parsed;
+  }
   return {
     activeJar: 'save',
     save:  { c10:0, c20:0, c50:0, c1:0, c2:0, n10:0 },
     spend: { c10:0, c20:0, c50:0, c1:0, c2:0, n10:0 },
-    history: [] 
+    history: [],
+    helpHistory: [],
+    portfolio: { LGO: 0, NASA: 0, MCFT: 0 },
+    prices: { LGO: 5.00, NASA: 10.00, MCFT: 8.00 },
+    lastMarketWeek: getWeekString()
   };
 }
 
@@ -684,15 +865,7 @@ function saveState() {
 // ─── SEED DATA ───────────────────────────────────────────────────────────
 function seedIfEmpty() {
   const existing = localStorage.getItem('myjars_v2');
-  if (existing) {
-    try {
-      const parsed = JSON.parse(existing);
-      const allZero = ['c10','c20','c50','c1','c2','n10'].every(k =>
-        (parsed.save[k]||0) === 0 && (parsed.spend[k]||0) === 0
-      ) && (!parsed.history || parsed.history.length === 0);
-      if (!allZero) return; 
-    } catch(e) { return; }
-  }
+  if (existing) return; // Load state handles migration
 
   const jan = { c10:15, c20:12, c50:8, c1:2, c2:2, n10:1 };
   const feb = { c10:30, c20:24, c50:7, c1:4, c2:4, n10:3 };
@@ -717,21 +890,53 @@ function seedIfEmpty() {
       { date: '8 Feb', save: febSave,  spend: 0 },
       { date: '15 Feb', save: febSave, spend: 0 },
       { date: '22 Feb', save: febSave, spend: 0 },
-    ]
+    ],
+    helpHistory: [],
+    portfolio: { LGO: 0, NASA: 0, MCFT: 0 },
+    prices: { LGO: 5.00, NASA: 10.00, MCFT: 8.00 },
+    lastMarketWeek: getWeekString()
   };
   localStorage.setItem('myjars_v2', JSON.stringify(seeded));
 }
 seedIfEmpty();
 
 let state = loadState();
+let currentTab = state.activeJar;
 
-// ─── JAR TOGGLE ──────────────────────────────────────────────────────────
-function setJar(jar) {
-  state.activeJar = jar;
-  document.getElementById('btn-save').className = 'jar-btn' + (jar==='save' ? ' active-save' : '');
-  document.getElementById('btn-spend').className = 'jar-btn' + (jar==='spend' ? ' active-spend' : '');
-  saveState();
-  render();
+// ─── TAB TOGGLE ──────────────────────────────────────────────────────────
+function setTab(tab) {
+  currentTab = tab;
+  
+  // Update Buttons
+  document.getElementById('btn-save').className = 'jar-btn' + (tab==='save' ? ' active-save' : '');
+  document.getElementById('btn-spend').className = 'jar-btn' + (tab==='spend' ? ' active-spend' : '');
+  document.getElementById('btn-helped').className = 'jar-btn' + (tab==='helped' ? ' active-helped' : '');
+  document.getElementById('btn-invest').className = 'jar-btn' + (tab==='invest' ? ' active-invest' : '');
+  
+  // Hide all dynamic sections first
+  document.getElementById('carousel-section').style.display = 'none';
+  document.getElementById('helped-section').style.display = 'none';
+  document.getElementById('invest-section').style.display = 'none';
+
+  if (tab === 'save' || tab === 'spend') {
+    state.activeJar = tab;
+    document.getElementById('carousel-section').style.display = 'flex';
+    
+    // Snap carousel back to the chart view
+    const vp = document.getElementById('carousel-viewport');
+    if (vp) vp.scrollTo({ left: 0, behavior: 'smooth' });
+
+    saveState();
+    render();
+  } else if (tab === 'helped') {
+    state.activeJar = 'save';
+    document.getElementById('helped-section').style.display = 'flex';
+    render();
+  } else if (tab === 'invest') {
+    state.activeJar = 'save';
+    document.getElementById('invest-section').style.display = 'flex';
+    renderMarket();
+  }
 }
 
 // ─── COIN TILES ──────────────────────────────────────────────────────────
@@ -764,13 +969,11 @@ function executeCoinChange(id, delta) {
   state[jar][id] = next;
 
   if (delta > 0) {
-    // animate
     const tile = document.getElementById(`tile-${id}`);
     tile.classList.remove('just-added');
     void tile.offsetWidth;
     tile.classList.add('just-added');
     setTimeout(() => tile.classList.remove('just-added'), 500);
-    // confetti for big milestones
     const total = Math.max(0, calcJarTotal('save') - calcJarTotal('spend'));
     if (Math.floor(total) > Math.floor(total - coin.value)) confettiBurst();
   }
@@ -780,18 +983,180 @@ function executeCoinChange(id, delta) {
   render();
 }
 
+// ─── I HELPED LOGIC ──────────────────────────────────────────────────────
+let helpedAmount = 0;
+
+function changeHelpedAmount(delta) {
+  helpedAmount = Math.max(0, helpedAmount + delta);
+  document.getElementById('helped-amount').textContent = helpedAmount;
+}
+
+function submitHelp() {
+  if (helpedAmount === 0) return; // Prevent submitting 0 amount
+  
+  let text = document.getElementById('helped-text').value.trim();
+  if (!text) text = "Helped out around the house"; // default string if empty
+  
+  approveAction = { type: 'help', amount: helpedAmount, text: text };
+  approveEntry = '';
+  updateApproveDots();
+  document.getElementById('approve-msg').textContent = '';
+  document.getElementById('approve-modal').classList.add('open');
+}
+
+function executeHelp(amount, text) {
+  const currentC1 = state.save['c1'] || 0;
+  state.save['c1'] = currentC1 + amount;
+  
+  const d = new Date();
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const dd = String(d.getDate()).padStart(2, '0');
+  const mmm = months[d.getMonth()];
+  const yy = String(d.getFullYear()).slice(-2);
+  const dateStr = `${dd} ${mmm} ${yy}`;
+  
+  if(!state.helpHistory) state.helpHistory = [];
+  state.helpHistory.unshift({ date: dateStr, text: text, amount: amount });
+  if (state.helpHistory.length > 50) state.helpHistory.pop();
+  
+  saveState();
+  recordHistory();
+  confettiBurst();
+  
+  helpedAmount = 0;
+  document.getElementById('helped-amount').textContent = '0';
+  document.getElementById('helped-text').value = '';
+  
+  setTab('save');
+}
+
+// ─── MARKET LOGIC ─────────────────────────────────────────────────────────
+function runMarketUpdate() {
+  const currentWeek = getWeekString();
+  
+  if (state.lastMarketWeek !== currentWeek) {
+    let totalDiv = 0;
+    Object.keys(STOCKS).forEach(id => {
+      // 1. Calculate Dividends
+      const shares = state.portfolio[id] || 0;
+      if (shares > 0 && STOCKS[id].div > 0) {
+        totalDiv += shares * STOCKS[id].div;
+      }
+      
+      // 2. Fluctuate Prices (Slight upward bias)
+      const stock = STOCKS[id];
+      const change = (Math.random() * (stock.vol * 1.5)) - (stock.vol * 0.5); 
+      let newPrice = state.prices[id] * (1 + change);
+      
+      // Round to nearest 10 cents to match the physical coin system properly
+      newPrice = Math.round(newPrice * 10) / 10; 
+      state.prices[id] = Math.max(1.00, newPrice); // Never drops below $1
+    });
+
+    if (totalDiv > 0) {
+      // Round total dividend to nearest 10 cents and pay in 10-cent coins
+      let exactDiv = Math.round(totalDiv * 10) / 10;
+      if (exactDiv > 0) {
+          state.save['c10'] = (state.save['c10'] || 0) + Math.round(exactDiv / 0.10);
+          state.helpHistory.unshift({ date: new Date().toLocaleDateString('en-SG', {day:'numeric', month:'short'}), text: '📈 Stock Dividends Paid!', amount: exactDiv });
+      }
+    }
+    
+    state.lastMarketWeek = currentWeek;
+    saveState();
+  }
+}
+
+function renderMarket() {
+  const grid = document.getElementById('market-grid');
+  let totalValue = 0;
+  grid.innerHTML = '';
+  
+  Object.keys(STOCKS).forEach(id => {
+    const stock = STOCKS[id];
+    const price = state.prices[id];
+    const shares = state.portfolio[id] || 0;
+    totalValue += price * shares;
+    
+    const diff = price - stock.base;
+    const diffStr = diff >= 0 ? `<span class="stock-change up">▲ +${fmt(diff).replace('S$','')}</span>` : `<span class="stock-change down">▼ ${fmt(Math.abs(diff)).replace('S$','')}</span>`;
+
+    grid.innerHTML += `
+      <div class="stock-card">
+        <div class="stock-info">
+          <div class="stock-icon">${stock.icon}</div>
+          <div>
+            <div class="stock-name">${stock.name}</div>
+            <div class="stock-price">${fmt(price)} ${diffStr}</div>
+          </div>
+        </div>
+        <div class="stock-actions">
+          ${shares > 0 ? `<div class="stock-shares">${shares} Shares</div>` : ''}
+          <div style="display:flex; gap:4px; margin-top:4px;">
+            ${shares > 0 ? `<button class="btn-trade" onclick="tradeStock('${id}', -1)" style="color:#ff6b6b">Sell</button>` : ''}
+            <button class="btn-trade" onclick="tradeStock('${id}', 1)" style="color:var(--green)">Buy</button>
+          </div>
+        </div>
+      </div>
+    `;
+  });
+  
+  document.getElementById('portfolio-total').textContent = fmt(totalValue);
+}
+
+function tradeStock(id, direction) {
+  const price = state.prices[id];
+  
+  if (direction === 1) { // BUY
+    // Greedy algorithm for exact change extraction
+    let rem = Math.round(price * 100);
+    let tempSave = { ...state.save };
+    const sorted = [...COINS].sort((a,b) => b.value - a.value);
+    
+    for(let c of sorted) {
+      let cv = Math.round(c.value * 100);
+      let needed = Math.floor(rem / cv);
+      let available = tempSave[c.id] || 0;
+      let toTake = Math.min(needed, available);
+      if(toTake > 0) { tempSave[c.id] -= toTake; rem -= toTake * cv; }
+    }
+    
+    if (rem > 0) {
+      alert("Uh oh! You don't have exact change for this. Ask Mama/Papa to break your bigger coins into smaller ones first!");
+      return;
+    }
+    state.save = tempSave;
+    state.portfolio[id] = (state.portfolio[id] || 0) + 1;
+    confettiBurst();
+    
+  } else { // SELL
+    state.portfolio[id] -= 1;
+    // Payout using largest coins available to represent the sale value
+    let rem = Math.round(price * 100);
+    const sorted = [...COINS].sort((a,b) => b.value - a.value);
+    for(let c of sorted) {
+      let cv = Math.round(c.value * 100);
+      let count = Math.floor(rem / cv);
+      if(count > 0) { state.save[c.id] = (state.save[c.id] || 0) + count; rem -= count * cv; }
+    }
+  }
+  
+  saveState();
+  renderMarket();
+  render(); 
+}
+
 // ─── APPROVAL PIN LOGIC ──────────────────────────────────────────────────
 const APPROVE_PIN = '2019';
-let pendingCoin = null;
+let approveAction = null; 
 let approveEntry = '';
 
 function askApproval(id, delta, e) {
   e.stopPropagation();
-  // Don't ask for PIN if they are trying to remove a coin that is already at 0
   const current = state[state.activeJar][id] || 0;
   if (delta < 0 && current === 0) return;
 
-  pendingCoin = { id, delta };
+  approveAction = { type: 'coin', id, delta };
   approveEntry = '';
   updateApproveDots();
   document.getElementById('approve-msg').textContent = '';
@@ -800,7 +1165,7 @@ function askApproval(id, delta, e) {
 
 function closeApprove() {
   document.getElementById('approve-modal').classList.remove('open');
-  pendingCoin = null;
+  approveAction = null;
 }
 
 function apprKey(digit) {
@@ -808,7 +1173,6 @@ function apprKey(digit) {
   approveEntry += digit;
   updateApproveDots();
   
-  // Auto-submit when 4 digits are entered
   if (approveEntry.length === 4) {
     setTimeout(apprSubmit, 150);
   }
@@ -828,8 +1192,10 @@ function updateApproveDots() {
 
 function apprSubmit() {
   if (approveEntry === APPROVE_PIN) {
-    if (pendingCoin) {
-      executeCoinChange(pendingCoin.id, pendingCoin.delta);
+    if (approveAction && approveAction.type === 'coin') {
+      executeCoinChange(approveAction.id, approveAction.delta);
+    } else if (approveAction && approveAction.type === 'help') {
+      executeHelp(approveAction.amount, approveAction.text);
     }
     closeApprove();
   } else {
@@ -865,12 +1231,10 @@ function render() {
   document.getElementById('spend-total').textContent = fmt(spendTotal);
   document.getElementById('grand-total').textContent = fmt(grand);
 
-  // jar fill level (max visual = S$50)
   const MAX = 50;
   setJarFill('saveFillRect',  saveTotal,  MAX);
   setJarFill('spendFillRect', spendTotal, MAX);
 
-  // coins
   const jar = state.activeJar;
   COINS.forEach(coin => {
     const cnt = state[jar][coin.id] || 0;
@@ -878,22 +1242,22 @@ function render() {
     document.getElementById(`val-${coin.id}`).textContent = fmt(cnt * coin.value);
   });
 
-  // history
   renderTrend();
+  renderHelpList();
 }
 
 function setJarFill(rectId, total, max) {
   const rect = document.getElementById(rectId);
   if (!rect) return;
   const pct = Math.min(total / max, 1);
-  const jarHeight = 36; // approx inner height in SVG units
+  const jarHeight = 36;
   const fillH = pct * jarHeight;
   const y = 50 - fillH;
   rect.setAttribute('y', y);
   rect.setAttribute('height', fillH);
 }
 
-// ─── HISTORY ─────────────────────────────────────────────────────────────
+// ─── HISTORY & CAROUSEL ──────────────────────────────────────────────────
 function recordHistory() {
   const saveTotal  = calcJarTotal('save');
   const spendTotal = calcJarTotal('spend');
@@ -909,14 +1273,34 @@ function recordHistory() {
   saveState();
 }
 
+function updateDots() {
+  const vp = document.getElementById('carousel-viewport');
+  if (!vp) return;
+  const index = Math.round(vp.scrollLeft / vp.clientWidth);
+  document.getElementById('dot-1').className = 'carousel-dot' + (index === 0 ? ' active' : '');
+  document.getElementById('dot-2').className = 'carousel-dot' + (index === 1 ? ' active' : '');
+}
+
+function renderHelpList() {
+  const list = document.getElementById('help-list');
+  if (!state.helpHistory || state.helpHistory.length === 0) {
+    list.innerHTML = '<div class="help-empty">No help tasks yet.<br>Time to do some chores! 🧹</div>';
+    return;
+  }
+  
+  list.innerHTML = state.helpHistory.map(h => `
+    <div class="help-item">
+      <div class="help-date">${h.date}</div>
+      <div class="help-text">${h.text} <span style="color:var(--gold); font-size:11px; float:right;">+$${h.amount.toFixed(2)}</span></div>
+    </div>
+  `).join('');
+}
+
 function renderTrend() {
   const svg = document.getElementById('trend-svg');
   const latestEl = document.getElementById('trend-latest');
 
-  // Aggregate history into weekly buckets
   const weekly = aggregateWeekly(state.history);
-
-  // Always show at least today's current total as last point
   const saveTotal  = calcJarTotal('save');
   const spendTotal = calcJarTotal('spend');
   const grand = Math.max(0, saveTotal - spendTotal);
@@ -937,7 +1321,6 @@ function renderTrend() {
     return;
   }
 
-  // Get SVG dimensions
   const W = svg.clientWidth  || 280;
   const H = svg.clientHeight || 70;
   const PAD_L = 28, PAD_R = 8, PAD_T = 10, PAD_B = 20;
@@ -956,7 +1339,6 @@ function renderTrend() {
     total: w.total
   }));
 
-  // Area fill path
   const linePts = pts.map(p => `${p.x},${p.y}`).join(' ');
   const areaPath = `M${pts[0].x},${pts[0].y} ` +
     pts.slice(1).map((p,i) => {
@@ -973,14 +1355,12 @@ function renderTrend() {
       return `C${cx},${prev.y} ${cx},${p.y} ${p.x},${p.y}`;
     }).join(' ');
 
-  // X-axis labels (show first, middle, last)
   const labelIdxs = [0, Math.floor((weekly.length-1)/2), weekly.length-1];
   const xlabels = [...new Set(labelIdxs)].map(i =>
     `<text x="${pts[i].x}" y="${H-3}" text-anchor="middle"
       fill="rgba(255,255,255,0.35)" font-family="Nunito,sans-serif" font-size="8" font-weight="700">${weekly[i].label}</text>`
   ).join('');
 
-  // Y-axis labels
   const ymid = (minV + maxV) / 2;
   const ylabels = [minV, maxV].map((v, i) => {
     const y = i === 0 ? PAD_T + H2 : PAD_T;
@@ -988,7 +1368,6 @@ function renderTrend() {
       fill="rgba(255,255,255,0.3)" font-family="Nunito,sans-serif" font-size="8" font-weight="700">$${v.toFixed(0)}</text>`;
   }).join('');
 
-  // Last point highlight dot
   const last = pts[pts.length - 1];
   const dotGlow = `<circle cx="${last.x}" cy="${last.y}" r="6" fill="rgba(255,215,0,0.15)"/>
     <circle cx="${last.x}" cy="${last.y}" r="3.5" fill="#FFD700"/>`;
@@ -1015,7 +1394,6 @@ function renderTrend() {
 
 function aggregateWeekly(history) {
   if (!history.length) return [];
-  // Group by week (Sun–Sat), take last entry per week
   const weeks = {};
   history.forEach(h => {
     const d = new Date(h.date + ' ' + new Date().getFullYear());
@@ -1059,7 +1437,6 @@ function openBackup() {
 }
 function closeBackup() {
   document.getElementById('backup-modal').classList.remove('open');
-  // reset pin pad state
   pinEntry = '';
   const sec = document.getElementById('pin-section');
   if (sec) sec.style.display = 'none';
@@ -1072,7 +1449,6 @@ function doExport() {
   navigator.clipboard.writeText(text).then(() => {
     showMsg('✅ Copied! Paste it into Notes to save.', 'ok');
   }).catch(() => {
-    // clipboard not available — text is shown in textarea, user can copy manually
     document.getElementById('backup-text').select();
     showMsg('📋 Select all text above and copy manually.', 'ok');
   });
@@ -1085,8 +1461,7 @@ function doImport() {
     if (!parsed.save || !parsed.spend) throw new Error();
     localStorage.setItem('myjars_v2', text);
     state = loadState();
-    render();
-    setJar(state.activeJar);
+    setTab(state.activeJar); 
     showMsg('✅ Restored successfully!', 'ok');
     setTimeout(closeBackup, 1200);
   } catch(e) {
@@ -1134,8 +1509,7 @@ function pinSubmit() {
   if (pinEntry === PASSCODE) {
     localStorage.removeItem('myjars_v2');
     state = loadState();
-    render();
-    setJar('save');
+    setTab('save');
     document.getElementById('backup-text').value = '';
     document.getElementById('pin-msg').textContent = '';
     showMsg('All data has been reset.', 'ok');
@@ -1158,8 +1532,8 @@ function pinSubmit() {
 
 // ─── INIT ─────────────────────────────────────────────────────────────────
 buildGrid();
-setJar(state.activeJar);
-render();
+runMarketUpdate(); 
+setTab(state.activeJar);
 
 // ─── SERVICE WORKER ───────────────────────────────────────────────────────
 if ('serviceWorker' in navigator) {
