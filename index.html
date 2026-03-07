@@ -228,7 +228,7 @@
   .coin-1   .coin-icon { background: linear-gradient(135deg, #d4af37, #f0c040, #c09030); color: #7a5200; }
   .coin-2   .coin-icon { background: linear-gradient(135deg, #c8922a, #e8aa40, #b07820); color: #5a3000; }
 
-  /* $10 note tile */
+  /* $10 note tile — wider rectangle style */
   .note-10 .coin-icon {
     width: 48px !important;
     height: 24px !important;
@@ -281,7 +281,7 @@
   .btn-minus { background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.8); }
   .btn-plus  { background: linear-gradient(135deg, var(--gold), var(--gold2)); color: #000; }
 
-  /* BOTTOM: TAB TOGGLE */
+  /* BOTTOM: JAR TOGGLE + HISTORY */
   .bottom-bar {
     padding: 8px 12px 12px;
     flex-shrink: 0;
@@ -292,7 +292,7 @@
 
   .jar-toggle {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: 1fr 1fr;
     background: rgba(255,255,255,0.06);
     border-radius: 50px;
     padding: 3px;
@@ -301,9 +301,9 @@
   .jar-btn {
     border: none;
     border-radius: 50px;
-    padding: 8px 4px;
+    padding: 8px;
     font-family: 'Nunito', sans-serif;
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 800;
     cursor: pointer;
     transition: all 0.2s;
@@ -320,57 +320,15 @@
     color: white;
     box-shadow: 0 2px 12px rgba(240,93,251,0.4);
   }
-  .jar-btn.active-helped {
-    background: linear-gradient(135deg, #FFD700, #FFA500);
-    color: #5a3000;
-    box-shadow: 0 2px 12px rgba(255,215,0,0.4);
-  }
 
-  /* SWIPEABLE CAROUSEL (CHART & HISTORY) */
-  .carousel-section {
+  /* TREND CHART */
+  .trend-section {
     flex: 1;
-    display: flex;
-    flex-direction: column;
-    min-height: 0;
-    padding-top: 6px;
-  }
-  .carousel-viewport {
-    flex: 1;
-    display: flex;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE/Edge */
-    min-height: 0;
-  }
-  .carousel-viewport::-webkit-scrollbar { display: none; }
-  
-  .carousel-slide {
-    flex: 0 0 100%;
-    scroll-snap-align: center;
-    padding: 0 12px;
+    padding: 6px 12px 0;
     display: flex;
     flex-direction: column;
     min-height: 0;
   }
-
-  .carousel-dots {
-    display: flex;
-    justify-content: center;
-    gap: 6px;
-    margin-top: 6px;
-    margin-bottom: 2px;
-  }
-  .carousel-dot {
-    width: 6px; height: 6px; border-radius: 50%;
-    background: rgba(255,255,255,0.2);
-    transition: background 0.2s, transform 0.2s;
-  }
-  .carousel-dot.active {
-    background: var(--gold);
-    transform: scale(1.2);
-  }
-
   .trend-card {
     flex: 1;
     background: var(--card);
@@ -406,80 +364,6 @@
     overflow: visible;
   }
 
-  /* HISTORY LIST UI */
-  .help-list {
-    flex: 1;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    margin-top: 4px;
-    padding-bottom: 4px;
-  }
-  .help-list::-webkit-scrollbar { display: none; }
-  .help-item {
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 12px;
-    padding: 8px 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-  }
-  .help-date {
-    font-size: 9px;
-    font-weight: 800;
-    color: var(--gold);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-  .help-text {
-    font-size: 13px;
-    color: white;
-    line-height: 1.3;
-  }
-  .help-empty {
-    text-align: center;
-    color: rgba(255,255,255,0.4);
-    font-size: 11px;
-    font-weight: 700;
-    margin-top: 20px;
-    line-height: 1.5;
-  }
-
-  /* I HELPED SECTION (REPLACES CAROUSEL) */
-  .helped-section {
-    flex: 1;
-    padding: 6px 12px 0;
-    display: none; /* hidden by default */
-    flex-direction: column;
-    min-height: 0;
-  }
-  .helped-card {
-    flex: 1;
-    background: var(--card);
-    border: 1px solid var(--card-border);
-    border-radius: 18px;
-    padding: 14px 16px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 10px;
-    min-height: 0;
-  }
-  .helped-input {
-    width: 100%;
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.15);
-    border-radius: 12px;
-    color: white;
-    font-family: 'Nunito', sans-serif;
-    font-size: 14px;
-    padding: 10px 12px;
-    outline: none;
-  }
-  .helped-input::placeholder { color: rgba(255,255,255,0.3); }
-
   /* Coin drop animation */
   @keyframes coinDrop {
     0%   { transform: translateY(-30px) scale(1.3); opacity: 0; }
@@ -504,7 +388,24 @@
     100% { transform: translateY(-80vh) rotate(720deg); opacity: 0; }
   }
 
-  /* Modal Styles */
+  /* Backup button — subtle */
+  .backup-btn {
+    background: none;
+    border: 1px solid rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.4);
+    font-size: 18px;
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    line-height: 1;
+    letter-spacing: 1px;
+    transition: all 0.2s;
+    padding-bottom: 4px;
+  }
+  .backup-btn:active { color: rgba(255,255,255,0.8); border-color: rgba(255,255,255,0.4); transform: scale(0.92); }
+
+  /* Modal */
   .modal-overlay {
     display: none;
     position: fixed; inset: 0; z-index: 9999;
@@ -556,6 +457,7 @@
     font-size: 12px; font-weight: 700; cursor: pointer; width: 100%;
   }
 
+  /* Reset */
   .reset-divider { height: 1px; background: rgba(255,255,255,0.08); margin: 2px 0; }
   .btn-reset { background: rgba(255,80,80,0.1); color: #ff6b6b; border: 1px solid rgba(255,80,80,0.25); width: 100%; }
   .btn-reset:active { transform: scale(0.97); }
@@ -582,6 +484,18 @@
   .pin-key:active { transform: scale(0.9); background: rgba(255,255,255,0.15); }
   .pin-key-clear { color: #ff9999; font-family: "Nunito", sans-serif; font-size: 16px; }
   .pin-key-ok { background: rgba(255,80,80,0.2); color: #ff6b6b; border-color: rgba(255,80,80,0.3); }
+
+  .streak-badge {
+    position: absolute;
+    top: 6px; right: 8px;
+    background: linear-gradient(135deg, var(--gold), var(--gold2));
+    color: #000;
+    font-size: 9px;
+    font-weight: 900;
+    padding: 2px 6px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+  }
 </style>
 </head>
 <body>
@@ -641,7 +555,7 @@
   <div id="approve-modal" class="modal-overlay" onclick="closeApprove()">
     <div class="modal-box" onclick="event.stopPropagation()">
       <div class="modal-title">🔒 Ask Mama/Papa</div>
-      <div class="modal-desc">Enter passcode to approve this addition.</div>
+      <div class="modal-desc">Enter passcode to approve this coin change.</div>
       <div class="pin-section">
         <div class="pin-dots" id="approve-pin-dots">
           <span class="pin-dot" id="apd0"></span>
@@ -722,61 +636,20 @@
     <div class="coins-grid" id="coins-grid"></div>
   </div>
 
-  <div class="carousel-section" id="carousel-section">
-    <div class="carousel-viewport" id="carousel-viewport" onscroll="updateDots()">
-      
-      <div class="carousel-slide">
-        <div class="trend-card">
-          <div class="trend-header">
-            <span class="trend-label">📈 Weekly Savings</span>
-            <span class="trend-latest" id="trend-latest"></span>
-          </div>
-          <svg id="trend-svg" preserveAspectRatio="none"></svg>
-        </div>
+  <div class="trend-section">
+    <div class="trend-card">
+      <div class="trend-header">
+        <span class="trend-label">📈 Weekly Savings</span>
+        <span class="trend-latest" id="trend-latest"></span>
       </div>
-
-      <div class="carousel-slide">
-        <div class="trend-card">
-          <div class="trend-header">
-            <span class="trend-label">⭐ Helping History</span>
-          </div>
-          <div class="help-list" id="help-list">
-            </div>
-        </div>
-      </div>
-
-    </div>
-    
-    <div class="carousel-dots">
-      <div class="carousel-dot active" id="dot-1"></div>
-      <div class="carousel-dot" id="dot-2"></div>
-    </div>
-  </div>
-
-  <div class="helped-section" id="helped-section">
-    <div class="helped-card">
-      <div style="font-size: 13px; font-weight: 800; color: var(--gold); letter-spacing: 0.5px; width: 100%;">I helped today, by:</div>
-      <input type="text" id="helped-text" class="helped-input" placeholder="e.g. washing the dishes" spellcheck="false">
-      
-      <div style="display: flex; align-items: center; justify-content: space-between; width: 100%; margin-top: 4px;">
-         <div style="display: flex; align-items: center; gap: 12px;">
-           <div class="coin-icon" style="background: linear-gradient(135deg, #d4af37, #f0c040, #c09030); color: #7a5200; width: 38px; height: 38px; font-size: 11px;">$1</div>
-           <div class="coin-controls">
-             <button class="btn-coin btn-minus" onclick="changeHelpedAmount(-1)">−</button>
-             <span id="helped-amount" style="font-family: 'Fredoka One'; font-size: 20px; width: 30px; text-align: center; color: white;">0</span>
-             <button class="btn-coin btn-plus" onclick="changeHelpedAmount(1)">+</button>
-           </div>
-         </div>
-         <button class="modal-btn" onclick="submitHelp()" style="background: linear-gradient(135deg, var(--gold), var(--gold2)); color: #5a3000; padding: 10px 24px; font-size: 13px; box-shadow: 0 4px 10px rgba(255,215,0,0.3);">Submit</button>
-      </div>
+      <svg id="trend-svg" preserveAspectRatio="none"></svg>
     </div>
   </div>
 
   <div class="bottom-bar">
     <div class="jar-toggle">
-      <button class="jar-btn active-save" id="btn-save" onclick="setTab('save')">💚 Save</button>
-      <button class="jar-btn" id="btn-spend" onclick="setTab('spend')">💜 Spend</button>
-      <button class="jar-btn" id="btn-helped" onclick="setTab('helped')">✅ I helped</button>
+      <button class="jar-btn active-save" id="btn-save" onclick="setJar('save')">💚 Add to Save</button>
+      <button class="jar-btn" id="btn-spend" onclick="setJar('spend')">💜 Add to Spend</button>
     </div>
   </div>
 
@@ -800,8 +673,7 @@ function loadState() {
     activeJar: 'save',
     save:  { c10:0, c20:0, c50:0, c1:0, c2:0, n10:0 },
     spend: { c10:0, c20:0, c50:0, c1:0, c2:0, n10:0 },
-    history: [],
-    helpHistory: []
+    history: [] 
   };
 }
 
@@ -818,14 +690,7 @@ function seedIfEmpty() {
       const allZero = ['c10','c20','c50','c1','c2','n10'].every(k =>
         (parsed.save[k]||0) === 0 && (parsed.spend[k]||0) === 0
       ) && (!parsed.history || parsed.history.length === 0);
-      if (!allZero) {
-        // Just make sure helpHistory array exists for backwards compatibility
-        if(!parsed.helpHistory) {
-            parsed.helpHistory = [];
-            localStorage.setItem('myjars_v2', JSON.stringify(parsed));
-        }
-        return; 
-      }
+      if (!allZero) return; 
     } catch(e) { return; }
   }
 
@@ -852,42 +717,21 @@ function seedIfEmpty() {
       { date: '8 Feb', save: febSave,  spend: 0 },
       { date: '15 Feb', save: febSave, spend: 0 },
       { date: '22 Feb', save: febSave, spend: 0 },
-    ],
-    helpHistory: []
+    ]
   };
   localStorage.setItem('myjars_v2', JSON.stringify(seeded));
 }
 seedIfEmpty();
 
 let state = loadState();
-let currentTab = state.activeJar;
 
-// ─── TAB TOGGLE ──────────────────────────────────────────────────────────
-function setTab(tab) {
-  currentTab = tab;
-  
-  // Update Buttons
-  document.getElementById('btn-save').className = 'jar-btn' + (tab==='save' ? ' active-save' : '');
-  document.getElementById('btn-spend').className = 'jar-btn' + (tab==='spend' ? ' active-spend' : '');
-  document.getElementById('btn-helped').className = 'jar-btn' + (tab==='helped' ? ' active-helped' : '');
-  
-  if (tab === 'save' || tab === 'spend') {
-    state.activeJar = tab;
-    document.getElementById('carousel-section').style.display = 'flex';
-    document.getElementById('helped-section').style.display = 'none';
-    
-    // Snap carousel back to the chart view (leftmost slide) when switching back
-    const vp = document.getElementById('carousel-viewport');
-    if (vp) vp.scrollTo({ left: 0, behavior: 'smooth' });
-
-    saveState();
-    render();
-  } else if (tab === 'helped') {
-    state.activeJar = 'save';
-    document.getElementById('carousel-section').style.display = 'none';
-    document.getElementById('helped-section').style.display = 'flex';
-    render();
-  }
+// ─── JAR TOGGLE ──────────────────────────────────────────────────────────
+function setJar(jar) {
+  state.activeJar = jar;
+  document.getElementById('btn-save').className = 'jar-btn' + (jar==='save' ? ' active-save' : '');
+  document.getElementById('btn-spend').className = 'jar-btn' + (jar==='spend' ? ' active-spend' : '');
+  saveState();
+  render();
 }
 
 // ─── COIN TILES ──────────────────────────────────────────────────────────
@@ -920,11 +764,13 @@ function executeCoinChange(id, delta) {
   state[jar][id] = next;
 
   if (delta > 0) {
+    // animate
     const tile = document.getElementById(`tile-${id}`);
     tile.classList.remove('just-added');
     void tile.offsetWidth;
     tile.classList.add('just-added');
     setTimeout(() => tile.classList.remove('just-added'), 500);
+    // confetti for big milestones
     const total = Math.max(0, calcJarTotal('save') - calcJarTotal('spend'));
     if (Math.floor(total) > Math.floor(total - coin.value)) confettiBurst();
   }
@@ -934,74 +780,18 @@ function executeCoinChange(id, delta) {
   render();
 }
 
-// ─── I HELPED LOGIC ──────────────────────────────────────────────────────
-let helpedAmount = 0;
-
-function changeHelpedAmount(delta) {
-  helpedAmount = Math.max(0, helpedAmount + delta);
-  document.getElementById('helped-amount').textContent = helpedAmount;
-}
-
-function submitHelp() {
-  if (helpedAmount === 0) return; // Prevent submitting 0 amount
-  
-  let text = document.getElementById('helped-text').value.trim();
-  if (!text) text = "Helped out around the house"; // default string if empty
-  
-  approveAction = { type: 'help', amount: helpedAmount, text: text };
-  approveEntry = '';
-  updateApproveDots();
-  document.getElementById('approve-msg').textContent = '';
-  document.getElementById('approve-modal').classList.add('open');
-}
-
-function executeHelp(amount, text) {
-  // Add $1 coins to Save jar directly
-  const currentC1 = state.save['c1'] || 0;
-  state.save['c1'] = currentC1 + amount;
-  
-  // Create Date string (DD MMM YY)
-  const d = new Date();
-  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  const dd = String(d.getDate()).padStart(2, '0');
-  const mmm = months[d.getMonth()];
-  const yy = String(d.getFullYear()).slice(-2);
-  const dateStr = `${dd} ${mmm} ${yy}`;
-  
-  // Push to history
-  if(!state.helpHistory) state.helpHistory = [];
-  state.helpHistory.unshift({ date: dateStr, text: text, amount: amount });
-  
-  // Keep history manageable
-  if (state.helpHistory.length > 50) state.helpHistory.pop();
-  
-  saveState();
-  recordHistory();
-  
-  // Celebrate
-  confettiBurst();
-  
-  // Reset form
-  helpedAmount = 0;
-  document.getElementById('helped-amount').textContent = '0';
-  document.getElementById('helped-text').value = '';
-  
-  // Return to save tab
-  setTab('save');
-}
-
-
 // ─── APPROVAL PIN LOGIC ──────────────────────────────────────────────────
 const APPROVE_PIN = '2019';
-let approveAction = null; 
+let pendingCoin = null;
 let approveEntry = '';
 
 function askApproval(id, delta, e) {
   e.stopPropagation();
+  // Don't ask for PIN if they are trying to remove a coin that is already at 0
   const current = state[state.activeJar][id] || 0;
   if (delta < 0 && current === 0) return;
 
-  approveAction = { type: 'coin', id, delta };
+  pendingCoin = { id, delta };
   approveEntry = '';
   updateApproveDots();
   document.getElementById('approve-msg').textContent = '';
@@ -1010,7 +800,7 @@ function askApproval(id, delta, e) {
 
 function closeApprove() {
   document.getElementById('approve-modal').classList.remove('open');
-  approveAction = null;
+  pendingCoin = null;
 }
 
 function apprKey(digit) {
@@ -1018,6 +808,7 @@ function apprKey(digit) {
   approveEntry += digit;
   updateApproveDots();
   
+  // Auto-submit when 4 digits are entered
   if (approveEntry.length === 4) {
     setTimeout(apprSubmit, 150);
   }
@@ -1037,10 +828,8 @@ function updateApproveDots() {
 
 function apprSubmit() {
   if (approveEntry === APPROVE_PIN) {
-    if (approveAction && approveAction.type === 'coin') {
-      executeCoinChange(approveAction.id, approveAction.delta);
-    } else if (approveAction && approveAction.type === 'help') {
-      executeHelp(approveAction.amount, approveAction.text);
+    if (pendingCoin) {
+      executeCoinChange(pendingCoin.id, pendingCoin.delta);
     }
     closeApprove();
   } else {
@@ -1076,10 +865,12 @@ function render() {
   document.getElementById('spend-total').textContent = fmt(spendTotal);
   document.getElementById('grand-total').textContent = fmt(grand);
 
+  // jar fill level (max visual = S$50)
   const MAX = 50;
   setJarFill('saveFillRect',  saveTotal,  MAX);
   setJarFill('spendFillRect', spendTotal, MAX);
 
+  // coins
   const jar = state.activeJar;
   COINS.forEach(coin => {
     const cnt = state[jar][coin.id] || 0;
@@ -1087,22 +878,22 @@ function render() {
     document.getElementById(`val-${coin.id}`).textContent = fmt(cnt * coin.value);
   });
 
+  // history
   renderTrend();
-  renderHelpList();
 }
 
 function setJarFill(rectId, total, max) {
   const rect = document.getElementById(rectId);
   if (!rect) return;
   const pct = Math.min(total / max, 1);
-  const jarHeight = 36;
+  const jarHeight = 36; // approx inner height in SVG units
   const fillH = pct * jarHeight;
   const y = 50 - fillH;
   rect.setAttribute('y', y);
   rect.setAttribute('height', fillH);
 }
 
-// ─── HISTORY & CAROUSEL ──────────────────────────────────────────────────
+// ─── HISTORY ─────────────────────────────────────────────────────────────
 function recordHistory() {
   const saveTotal  = calcJarTotal('save');
   const spendTotal = calcJarTotal('spend');
@@ -1118,35 +909,14 @@ function recordHistory() {
   saveState();
 }
 
-function updateDots() {
-  const vp = document.getElementById('carousel-viewport');
-  if (!vp) return;
-  // Calculate index based on scroll position vs width
-  const index = Math.round(vp.scrollLeft / vp.clientWidth);
-  document.getElementById('dot-1').className = 'carousel-dot' + (index === 0 ? ' active' : '');
-  document.getElementById('dot-2').className = 'carousel-dot' + (index === 1 ? ' active' : '');
-}
-
-function renderHelpList() {
-  const list = document.getElementById('help-list');
-  if (!state.helpHistory || state.helpHistory.length === 0) {
-    list.innerHTML = '<div class="help-empty">No help tasks yet.<br>Time to do some chores! 🧹</div>';
-    return;
-  }
-  
-  list.innerHTML = state.helpHistory.map(h => `
-    <div class="help-item">
-      <div class="help-date">${h.date}</div>
-      <div class="help-text">${h.text} <span style="color:var(--gold); font-size:11px; float:right;">+$${h.amount}</span></div>
-    </div>
-  `).join('');
-}
-
 function renderTrend() {
   const svg = document.getElementById('trend-svg');
   const latestEl = document.getElementById('trend-latest');
 
+  // Aggregate history into weekly buckets
   const weekly = aggregateWeekly(state.history);
+
+  // Always show at least today's current total as last point
   const saveTotal  = calcJarTotal('save');
   const spendTotal = calcJarTotal('spend');
   const grand = Math.max(0, saveTotal - spendTotal);
@@ -1167,6 +937,7 @@ function renderTrend() {
     return;
   }
 
+  // Get SVG dimensions
   const W = svg.clientWidth  || 280;
   const H = svg.clientHeight || 70;
   const PAD_L = 28, PAD_R = 8, PAD_T = 10, PAD_B = 20;
@@ -1185,6 +956,7 @@ function renderTrend() {
     total: w.total
   }));
 
+  // Area fill path
   const linePts = pts.map(p => `${p.x},${p.y}`).join(' ');
   const areaPath = `M${pts[0].x},${pts[0].y} ` +
     pts.slice(1).map((p,i) => {
@@ -1201,12 +973,14 @@ function renderTrend() {
       return `C${cx},${prev.y} ${cx},${p.y} ${p.x},${p.y}`;
     }).join(' ');
 
+  // X-axis labels (show first, middle, last)
   const labelIdxs = [0, Math.floor((weekly.length-1)/2), weekly.length-1];
   const xlabels = [...new Set(labelIdxs)].map(i =>
     `<text x="${pts[i].x}" y="${H-3}" text-anchor="middle"
       fill="rgba(255,255,255,0.35)" font-family="Nunito,sans-serif" font-size="8" font-weight="700">${weekly[i].label}</text>`
   ).join('');
 
+  // Y-axis labels
   const ymid = (minV + maxV) / 2;
   const ylabels = [minV, maxV].map((v, i) => {
     const y = i === 0 ? PAD_T + H2 : PAD_T;
@@ -1214,6 +988,7 @@ function renderTrend() {
       fill="rgba(255,255,255,0.3)" font-family="Nunito,sans-serif" font-size="8" font-weight="700">$${v.toFixed(0)}</text>`;
   }).join('');
 
+  // Last point highlight dot
   const last = pts[pts.length - 1];
   const dotGlow = `<circle cx="${last.x}" cy="${last.y}" r="6" fill="rgba(255,215,0,0.15)"/>
     <circle cx="${last.x}" cy="${last.y}" r="3.5" fill="#FFD700"/>`;
@@ -1240,6 +1015,7 @@ function renderTrend() {
 
 function aggregateWeekly(history) {
   if (!history.length) return [];
+  // Group by week (Sun–Sat), take last entry per week
   const weeks = {};
   history.forEach(h => {
     const d = new Date(h.date + ' ' + new Date().getFullYear());
@@ -1283,6 +1059,7 @@ function openBackup() {
 }
 function closeBackup() {
   document.getElementById('backup-modal').classList.remove('open');
+  // reset pin pad state
   pinEntry = '';
   const sec = document.getElementById('pin-section');
   if (sec) sec.style.display = 'none';
@@ -1295,6 +1072,7 @@ function doExport() {
   navigator.clipboard.writeText(text).then(() => {
     showMsg('✅ Copied! Paste it into Notes to save.', 'ok');
   }).catch(() => {
+    // clipboard not available — text is shown in textarea, user can copy manually
     document.getElementById('backup-text').select();
     showMsg('📋 Select all text above and copy manually.', 'ok');
   });
@@ -1307,7 +1085,8 @@ function doImport() {
     if (!parsed.save || !parsed.spend) throw new Error();
     localStorage.setItem('myjars_v2', text);
     state = loadState();
-    setTab(state.activeJar); 
+    render();
+    setJar(state.activeJar);
     showMsg('✅ Restored successfully!', 'ok');
     setTimeout(closeBackup, 1200);
   } catch(e) {
@@ -1355,7 +1134,8 @@ function pinSubmit() {
   if (pinEntry === PASSCODE) {
     localStorage.removeItem('myjars_v2');
     state = loadState();
-    setTab('save');
+    render();
+    setJar('save');
     document.getElementById('backup-text').value = '';
     document.getElementById('pin-msg').textContent = '';
     showMsg('All data has been reset.', 'ok');
@@ -1378,7 +1158,8 @@ function pinSubmit() {
 
 // ─── INIT ─────────────────────────────────────────────────────────────────
 buildGrid();
-setTab(state.activeJar);
+setJar(state.activeJar);
+render();
 
 // ─── SERVICE WORKER ───────────────────────────────────────────────────────
 if ('serviceWorker' in navigator) {
