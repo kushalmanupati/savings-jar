@@ -146,7 +146,7 @@
   /* SVG jar fill level */
   .jar-svg { width: 100%; height: 100%; }
 
-  /* TOTAL BANNER */
+  /* TOTAL BANNER (NEW FORMAT) */
   .total-banner {
     margin: 8px 12px 0;
     background: linear-gradient(135deg, rgba(255,215,0,0.15), rgba(255,165,0,0.1));
@@ -154,8 +154,9 @@
     border-radius: 16px;
     padding: 8px 16px;
     display: flex;
-    align-items: center;
-    justify-content: space-between;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 4px;
     flex-shrink: 0;
   }
   .total-label { font-size: 12px; font-weight: 800; color: var(--gold); opacity: 0.85; text-transform: uppercase; letter-spacing: 1px; }
@@ -228,7 +229,6 @@
   .coin-1   .coin-icon { background: linear-gradient(135deg, #d4af37, #f0c040, #c09030); color: #7a5200; }
   .coin-2   .coin-icon { background: linear-gradient(135deg, #c8922a, #e8aa40, #b07820); color: #5a3000; }
 
-  /* $10 note tile */
   .note-10 .coin-icon {
     width: 48px !important;
     height: 24px !important;
@@ -326,7 +326,7 @@
     box-shadow: 0 2px 12px rgba(255,215,0,0.4);
   }
   
-  /* NEW: INVEST TAB STYLES */
+  /* INVEST TAB STYLES */
   .jar-btn.active-invest {
     background: linear-gradient(135deg, #4fc3f7, #0288d1);
     color: white;
@@ -361,8 +361,8 @@
     display: flex;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE/Edge */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
     min-height: 0;
   }
   .carousel-viewport::-webkit-scrollbar { display: none; }
@@ -469,11 +469,11 @@
     line-height: 1.5;
   }
 
-  /* I HELPED SECTION (REPLACES CAROUSEL) */
+  /* I HELPED SECTION */
   .helped-section {
     flex: 1;
     padding: 6px 12px 0;
-    display: none; /* hidden by default */
+    display: none;
     flex-direction: column;
     min-height: 0;
   }
@@ -502,7 +502,7 @@
   }
   .helped-input::placeholder { color: rgba(255,255,255,0.3); }
 
-  /* Coin drop animation */
+  /* Animations */
   @keyframes coinDrop {
     0%   { transform: translateY(-30px) scale(1.3); opacity: 0; }
     60%  { transform: translateY(4px) scale(0.95); opacity: 1; }
@@ -513,14 +513,10 @@
     animation: coinDrop 0.4s cubic-bezier(.17,.67,.35,1.2);
   }
 
-  /* confetti burst */
   .confetti {
-    position: fixed;
-    pointer-events: none;
-    z-index: 999;
+    position: fixed; pointer-events: none; z-index: 999;
     top: 0; left: 0; right: 0; bottom: 0;
   }
-
   @keyframes floatUp {
     0%   { transform: translateY(0) rotate(0deg); opacity: 1; }
     100% { transform: translateY(-80vh) rotate(720deg); opacity: 0; }
@@ -528,42 +524,27 @@
 
   /* Modal Styles */
   .modal-overlay {
-    display: none;
-    position: fixed; inset: 0; z-index: 9999;
-    background: rgba(0,0,0,0.7);
-    backdrop-filter: blur(6px);
+    display: none; position: fixed; inset: 0; z-index: 9999;
+    background: rgba(0,0,0,0.7); backdrop-filter: blur(6px);
     align-items: center; justify-content: center;
   }
   .modal-overlay.open { display: flex; }
   .modal-box {
-    background: #1a1744;
-    border: 1px solid rgba(255,255,255,0.15);
-    border-radius: 24px;
-    padding: 22px 20px 18px;
-    width: calc(100vw - 40px);
-    max-width: 360px;
-    display: flex; flex-direction: column; gap: 12px;
+    background: #1a1744; border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 24px; padding: 22px 20px 18px; width: calc(100vw - 40px);
+    max-width: 360px; display: flex; flex-direction: column; gap: 12px;
   }
   .modal-title { font-family: 'Fredoka One', cursive; font-size: 18px; color: var(--gold); }
   .modal-desc  { font-size: 12px; color: var(--text2); line-height: 1.5; }
   .backup-textarea {
-    width: 100%; height: 90px;
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.15);
-    border-radius: 12px;
-    color: white;
-    font-family: monospace;
-    font-size: 11px;
-    padding: 10px;
-    resize: none;
-    outline: none;
+    width: 100%; height: 90px; background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; color: white;
+    font-family: monospace; font-size: 11px; padding: 10px; resize: none; outline: none;
   }
   .modal-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
   .modal-btn {
-    border: none; border-radius: 12px;
-    padding: 10px 6px;
-    font-family: 'Nunito', sans-serif;
-    font-size: 12px; font-weight: 800;
+    border: none; border-radius: 12px; padding: 10px 6px;
+    font-family: 'Nunito', sans-serif; font-size: 12px; font-weight: 800;
     cursor: pointer; transition: transform 0.1s;
   }
   .modal-btn:active { transform: scale(0.95); }
@@ -573,11 +554,9 @@
   .backup-msg.ok  { color: var(--green); }
   .backup-msg.err { color: #ff6b6b; }
   .modal-close {
-    background: none; border: 1px solid rgba(255,255,255,0.12);
-    color: var(--text2); border-radius: 10px; padding: 7px;
-    font-size: 12px; font-weight: 700; cursor: pointer; width: 100%;
+    background: none; border: 1px solid rgba(255,255,255,0.12); color: var(--text2); 
+    border-radius: 10px; padding: 7px; font-size: 12px; font-weight: 700; cursor: pointer; width: 100%;
   }
-
   .reset-divider { height: 1px; background: rgba(255,255,255,0.08); margin: 2px 0; }
   .btn-reset { background: rgba(255,80,80,0.1); color: #ff6b6b; border: 1px solid rgba(255,80,80,0.25); width: 100%; }
   .btn-reset:active { transform: scale(0.97); }
@@ -588,8 +567,7 @@
   .pin-dots { display: flex; gap: 8px; align-items: center; justify-content: center; }
   .pin-dot {
     width: 10px; height: 10px; border-radius: 50%;
-    background: rgba(255,255,255,0.15);
-    border: 1.5px solid rgba(255,255,255,0.25);
+    background: rgba(255,255,255,0.15); border: 1.5px solid rgba(255,255,255,0.25);
     transition: background 0.15s, border-color 0.15s;
   }
   .pin-dot.filled { background: #ff6b6b; border-color: #ff6b6b; box-shadow: 0 0 6px rgba(255,80,80,0.5); }
@@ -598,8 +576,7 @@
   .pin-key {
     background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1);
     color: white; font-family: "Fredoka One", cursive; font-size: 18px;
-    border-radius: 10px; padding: 9px 0; cursor: pointer;
-    transition: transform 0.1s, background 0.1s;
+    border-radius: 10px; padding: 9px 0; cursor: pointer; transition: transform 0.1s, background 0.1s;
   }
   .pin-key:active { transform: scale(0.9); background: rgba(255,255,255,0.15); }
   .pin-key-clear { color: #ff9999; font-family: "Nunito", sans-serif; font-size: 16px; }
@@ -627,7 +604,6 @@
         <button class="modal-btn btn-import" onclick="doImport()">📥 Restore from Text</button>
       </div>
       <div id="backup-msg" class="backup-msg"></div>
-
       <div class="reset-divider"></div>
       <button class="modal-btn btn-reset" onclick="togglePinPad()">🗑️ Reset All Data</button>
 
@@ -655,7 +631,6 @@
         </div>
         <div id="pin-msg" class="backup-msg"></div>
       </div>
-
       <button class="modal-close" onclick="closeBackup()">✕ Close</button>
     </div>
   </div>
@@ -735,8 +710,13 @@
   </div>
 
   <div class="total-banner">
-    <span class="total-label">⭐ Net Savings</span>
-    <span class="total-amount" id="grand-total">S$0.00</span>
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <span class="total-label">⭐ My Money</span>
+      <span class="total-amount" id="my-money-total">S$0.00</span>
+    </div>
+    <div id="my-money-breakdown" style="font-size: 10px; color: var(--text2); text-align: right; font-weight: 700;">
+      Save (S$0.00) + Invest (S$0.00) - Spend (S$0.00)
+    </div>
   </div>
 
   <div class="coins-section">
@@ -762,8 +742,16 @@
           <div class="trend-header">
             <span class="trend-label">⭐ Helping History</span>
           </div>
-          <div class="help-list" id="help-list">
-            </div>
+          <div class="help-list" id="help-list"></div>
+        </div>
+      </div>
+      
+      <div class="carousel-slide">
+        <div class="trend-card">
+          <div class="trend-header">
+            <span class="trend-label">💸 Investment</span>
+          </div>
+          <div class="help-list" id="div-list"></div>
         </div>
       </div>
 
@@ -772,6 +760,7 @@
     <div class="carousel-dots">
       <div class="carousel-dot active" id="dot-1"></div>
       <div class="carousel-dot" id="dot-2"></div>
+      <div class="carousel-dot" id="dot-3"></div>
     </div>
   </div>
 
@@ -779,7 +768,6 @@
     <div class="helped-card">
       <div style="font-size: 13px; font-weight: 800; color: var(--gold); letter-spacing: 0.5px; width: 100%;">I helped today, by:</div>
       <input type="text" id="helped-text" class="helped-input" placeholder="e.g. washing the dishes" spellcheck="false">
-      
       <div style="display: flex; align-items: center; justify-content: space-between; width: 100%; margin-top: 4px;">
          <div style="display: flex; align-items: center; gap: 12px;">
            <div class="coin-icon" style="background: linear-gradient(135deg, #d4af37, #f0c040, #c09030); color: #7a5200; width: 38px; height: 38px; font-size: 11px;">$1</div>
@@ -826,9 +814,9 @@ const COINS = [
 ];
 
 const STOCKS = {
-  LGO:  { id: 'LGO',  name: 'Lego',      base: 5.00,  div: 0.10, vol: 0.04, icon: '🧱' }, // Safe, reliable dividend
-  NASA: { id: 'NASA', name: 'NASA',      base: 10.00, div: 0.00, vol: 0.15, icon: '🚀' }, // High risk, high reward, no dividend
-  MCFT: { id: 'MCFT', name: 'Minecraft', base: 8.00,  div: 0.05, vol: 0.08, icon: '⛏️' }  // Medium risk
+  LGO:  { id: 'LGO',  name: 'Lego',      base: 5.00,  div: 0.10, vol: 0.04, icon: '🧱' }, 
+  NASA: { id: 'NASA', name: 'NASA',      base: 10.00, div: 0.00, vol: 0.15, icon: '🚀' }, 
+  MCFT: { id: 'MCFT', name: 'Minecraft', base: 8.00,  div: 0.05, vol: 0.08, icon: '⛏️' }  
 };
 
 function getWeekString() {
@@ -839,11 +827,11 @@ function loadState() {
   const raw = localStorage.getItem('myjars_v2');
   if (raw) {
       let parsed = JSON.parse(raw);
-      // Migrate old data to include new stock features
       if (!parsed.portfolio) parsed.portfolio = { LGO: 0, NASA: 0, MCFT: 0 };
       if (!parsed.prices) parsed.prices = { LGO: 5.00, NASA: 10.00, MCFT: 8.00 };
       if (!parsed.lastMarketWeek) parsed.lastMarketWeek = getWeekString();
       if (!parsed.helpHistory) parsed.helpHistory = [];
+      if (!parsed.divHistory) parsed.divHistory = []; 
       return parsed;
   }
   return {
@@ -852,6 +840,7 @@ function loadState() {
     spend: { c10:0, c20:0, c50:0, c1:0, c2:0, n10:0 },
     history: [],
     helpHistory: [],
+    divHistory: [],
     portfolio: { LGO: 0, NASA: 0, MCFT: 0 },
     prices: { LGO: 5.00, NASA: 10.00, MCFT: 8.00 },
     lastMarketWeek: getWeekString()
@@ -862,10 +851,9 @@ function saveState() {
   localStorage.setItem('myjars_v2', JSON.stringify(state));
 }
 
-// ─── SEED DATA ───────────────────────────────────────────────────────────
 function seedIfEmpty() {
   const existing = localStorage.getItem('myjars_v2');
-  if (existing) return; // Load state handles migration
+  if (existing) return; 
 
   const jan = { c10:15, c20:12, c50:8, c1:2, c2:2, n10:1 };
   const feb = { c10:30, c20:24, c50:7, c1:4, c2:4, n10:3 };
@@ -892,6 +880,7 @@ function seedIfEmpty() {
       { date: '22 Feb', save: febSave, spend: 0 },
     ],
     helpHistory: [],
+    divHistory: [],
     portfolio: { LGO: 0, NASA: 0, MCFT: 0 },
     prices: { LGO: 5.00, NASA: 10.00, MCFT: 8.00 },
     lastMarketWeek: getWeekString()
@@ -907,13 +896,11 @@ let currentTab = state.activeJar;
 function setTab(tab) {
   currentTab = tab;
   
-  // Update Buttons
   document.getElementById('btn-save').className = 'jar-btn' + (tab==='save' ? ' active-save' : '');
   document.getElementById('btn-spend').className = 'jar-btn' + (tab==='spend' ? ' active-spend' : '');
   document.getElementById('btn-helped').className = 'jar-btn' + (tab==='helped' ? ' active-helped' : '');
   document.getElementById('btn-invest').className = 'jar-btn' + (tab==='invest' ? ' active-invest' : '');
   
-  // Hide all dynamic sections first
   document.getElementById('carousel-section').style.display = 'none';
   document.getElementById('helped-section').style.display = 'none';
   document.getElementById('invest-section').style.display = 'none';
@@ -921,11 +908,8 @@ function setTab(tab) {
   if (tab === 'save' || tab === 'spend') {
     state.activeJar = tab;
     document.getElementById('carousel-section').style.display = 'flex';
-    
-    // Snap carousel back to the chart view
     const vp = document.getElementById('carousel-viewport');
     if (vp) vp.scrollTo({ left: 0, behavior: 'smooth' });
-
     saveState();
     render();
   } else if (tab === 'helped') {
@@ -992,11 +976,9 @@ function changeHelpedAmount(delta) {
 }
 
 function submitHelp() {
-  if (helpedAmount === 0) return; // Prevent submitting 0 amount
-  
+  if (helpedAmount === 0) return; 
   let text = document.getElementById('helped-text').value.trim();
-  if (!text) text = "Helped out around the house"; // default string if empty
-  
+  if (!text) text = "Helped out around the house";
   approveAction = { type: 'help', amount: helpedAmount, text: text };
   approveEntry = '';
   updateApproveDots();
@@ -1026,7 +1008,6 @@ function executeHelp(amount, text) {
   helpedAmount = 0;
   document.getElementById('helped-amount').textContent = '0';
   document.getElementById('helped-text').value = '';
-  
   setTab('save');
 }
 
@@ -1035,48 +1016,49 @@ function runMarketUpdate() {
   const currentWeek = getWeekString();
   
   if (state.lastMarketWeek !== currentWeek) {
-    let totalDiv = 0;
     Object.keys(STOCKS).forEach(id => {
-      // 1. Calculate Dividends
+      const stock = STOCKS[id];
       const shares = state.portfolio[id] || 0;
-      if (shares > 0 && STOCKS[id].div > 0) {
-        totalDiv += shares * STOCKS[id].div;
+      
+      if (shares > 0 && stock.div > 0) {
+        const divAmount = shares * stock.div;
+        let exactDiv = Math.round(divAmount * 10) / 10;
+        
+        if (exactDiv > 0) {
+            state.save['c10'] = (state.save['c10'] || 0) + Math.round(exactDiv / 0.10);
+            state.divHistory.unshift({ 
+                date: new Date().toLocaleDateString('en-SG', {day:'numeric', month:'short'}), 
+                text: `📈 ${stock.name} Paid Dividend`, 
+                amount: exactDiv 
+            });
+        }
       }
       
-      // 2. Fluctuate Prices (Slight upward bias)
-      const stock = STOCKS[id];
       const change = (Math.random() * (stock.vol * 1.5)) - (stock.vol * 0.5); 
       let newPrice = state.prices[id] * (1 + change);
-      
-      // Round to nearest 10 cents to match the physical coin system properly
-      newPrice = Math.round(newPrice * 10) / 10; 
-      state.prices[id] = Math.max(1.00, newPrice); // Never drops below $1
+      state.prices[id] = Math.max(1.00, Math.round(newPrice * 10) / 10); 
     });
 
-    if (totalDiv > 0) {
-      // Round total dividend to nearest 10 cents and pay in 10-cent coins
-      let exactDiv = Math.round(totalDiv * 10) / 10;
-      if (exactDiv > 0) {
-          state.save['c10'] = (state.save['c10'] || 0) + Math.round(exactDiv / 0.10);
-          state.helpHistory.unshift({ date: new Date().toLocaleDateString('en-SG', {day:'numeric', month:'short'}), text: '📈 Stock Dividends Paid!', amount: exactDiv });
-      }
-    }
+    if (state.divHistory.length > 50) state.divHistory = state.divHistory.slice(0, 50);
     
     state.lastMarketWeek = currentWeek;
     saveState();
   }
 }
 
+function calcInvestTotal() {
+  return Object.keys(STOCKS).reduce((sum, id) => sum + (state.prices[id] * (state.portfolio[id] || 0)), 0);
+}
+
 function renderMarket() {
   const grid = document.getElementById('market-grid');
-  let totalValue = 0;
+  let totalValue = calcInvestTotal();
   grid.innerHTML = '';
   
   Object.keys(STOCKS).forEach(id => {
     const stock = STOCKS[id];
     const price = state.prices[id];
     const shares = state.portfolio[id] || 0;
-    totalValue += price * shares;
     
     const diff = price - stock.base;
     const diffStr = diff >= 0 ? `<span class="stock-change up">▲ +${fmt(diff).replace('S$','')}</span>` : `<span class="stock-change down">▼ ${fmt(Math.abs(diff)).replace('S$','')}</span>`;
@@ -1108,7 +1090,6 @@ function tradeStock(id, direction) {
   const price = state.prices[id];
   
   if (direction === 1) { // BUY
-    // Greedy algorithm for exact change extraction
     let rem = Math.round(price * 100);
     let tempSave = { ...state.save };
     const sorted = [...COINS].sort((a,b) => b.value - a.value);
@@ -1131,7 +1112,6 @@ function tradeStock(id, direction) {
     
   } else { // SELL
     state.portfolio[id] -= 1;
-    // Payout using largest coins available to represent the sale value
     let rem = Math.round(price * 100);
     const sorted = [...COINS].sort((a,b) => b.value - a.value);
     for(let c of sorted) {
@@ -1172,10 +1152,7 @@ function apprKey(digit) {
   if (approveEntry.length >= 4) return;
   approveEntry += digit;
   updateApproveDots();
-  
-  if (approveEntry.length === 4) {
-    setTimeout(apprSubmit, 150);
-  }
+  if (approveEntry.length === 4) setTimeout(apprSubmit, 150);
 }
 
 function apprClear() {
@@ -1214,22 +1191,26 @@ function apprSubmit() {
   }
 }
 
-// ─── CALC ─────────────────────────────────────────────────────────────────
+// ─── CALC & FORMAT ────────────────────────────────────────────────────────
 function calcJarTotal(jar) {
   return COINS.reduce((sum, c) => sum + (state[jar][c.id] || 0) * c.value, 0);
 }
-
 function fmt(n) { return 'S$' + n.toFixed(2); }
 
 // ─── RENDER ──────────────────────────────────────────────────────────────
 function render() {
   const saveTotal  = calcJarTotal('save');
   const spendTotal = calcJarTotal('spend');
-  const grand = Math.max(0, saveTotal - spendTotal);
+  const investTotal = calcInvestTotal();
+  
+  // NEW FORMULA
+  const myMoney = Math.max(0, saveTotal + investTotal - spendTotal);
 
   document.getElementById('save-total').textContent  = fmt(saveTotal);
   document.getElementById('spend-total').textContent = fmt(spendTotal);
-  document.getElementById('grand-total').textContent = fmt(grand);
+  
+  document.getElementById('my-money-total').textContent = fmt(myMoney);
+  document.getElementById('my-money-breakdown').textContent = `Save (${fmt(saveTotal)}) + Invest (${fmt(investTotal)}) - Spend (${fmt(spendTotal)})`;
 
   const MAX = 50;
   setJarFill('saveFillRect',  saveTotal,  MAX);
@@ -1244,16 +1225,15 @@ function render() {
 
   renderTrend();
   renderHelpList();
+  renderDivList();
 }
 
 function setJarFill(rectId, total, max) {
   const rect = document.getElementById(rectId);
   if (!rect) return;
   const pct = Math.min(total / max, 1);
-  const jarHeight = 36;
-  const fillH = pct * jarHeight;
-  const y = 50 - fillH;
-  rect.setAttribute('y', y);
+  const fillH = pct * 36;
+  rect.setAttribute('y', 50 - fillH);
   rect.setAttribute('height', fillH);
 }
 
@@ -1279,6 +1259,7 @@ function updateDots() {
   const index = Math.round(vp.scrollLeft / vp.clientWidth);
   document.getElementById('dot-1').className = 'carousel-dot' + (index === 0 ? ' active' : '');
   document.getElementById('dot-2').className = 'carousel-dot' + (index === 1 ? ' active' : '');
+  document.getElementById('dot-3').className = 'carousel-dot' + (index === 2 ? ' active' : '');
 }
 
 function renderHelpList() {
@@ -1287,7 +1268,6 @@ function renderHelpList() {
     list.innerHTML = '<div class="help-empty">No help tasks yet.<br>Time to do some chores! 🧹</div>';
     return;
   }
-  
   list.innerHTML = state.helpHistory.map(h => `
     <div class="help-item">
       <div class="help-date">${h.date}</div>
@@ -1296,14 +1276,26 @@ function renderHelpList() {
   `).join('');
 }
 
+function renderDivList() {
+  const list = document.getElementById('div-list');
+  if (!state.divHistory || state.divHistory.length === 0) {
+    list.innerHTML = '<div class="help-empty">No dividends yet.<br>Buy some stocks to earn! 🏢</div>';
+    return;
+  }
+  list.innerHTML = state.divHistory.map(h => `
+    <div class="help-item">
+      <div class="help-date">${h.date}</div>
+      <div class="help-text">${h.text} <span style="color:var(--green); font-size:11px; float:right;">+$${h.amount.toFixed(2)}</span></div>
+    </div>
+  `).join('');
+}
+
 function renderTrend() {
   const svg = document.getElementById('trend-svg');
   const latestEl = document.getElementById('trend-latest');
-
   const weekly = aggregateWeekly(state.history);
-  const saveTotal  = calcJarTotal('save');
-  const spendTotal = calcJarTotal('spend');
-  const grand = Math.max(0, saveTotal - spendTotal);
+  
+  const grand = Math.max(0, calcJarTotal('save') + calcInvestTotal() - calcJarTotal('spend'));
   const todayLabel = new Date().toLocaleDateString('en-SG', {day:'numeric', month:'short'});
 
   if (weekly.length === 0 || weekly[weekly.length-1].label !== todayLabel) {
@@ -1315,80 +1307,41 @@ function renderTrend() {
   latestEl.textContent = fmt(grand);
 
   if (weekly.length < 2) {
-    svg.innerHTML = `<text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle"
-      fill="rgba(255,255,255,0.25)" font-family="Nunito,sans-serif" font-size="11" font-weight="700">
-      Keep saving to see your trend! 🌱</text>`;
+    svg.innerHTML = `<text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" fill="rgba(255,255,255,0.25)" font-family="Nunito,sans-serif" font-size="11" font-weight="700">Keep saving to see your trend! 🌱</text>`;
     return;
   }
 
-  const W = svg.clientWidth  || 280;
-  const H = svg.clientHeight || 70;
+  const W = svg.clientWidth || 280, H = svg.clientHeight || 70;
   const PAD_L = 28, PAD_R = 8, PAD_T = 10, PAD_B = 20;
-  const W2 = W - PAD_L - PAD_R;
-  const H2 = H - PAD_T - PAD_B;
+  const W2 = W - PAD_L - PAD_R, H2 = H - PAD_T - PAD_B;
 
   const vals = weekly.map(w => w.total);
-  const minV = Math.min(...vals);
-  const maxV = Math.max(...vals);
+  const minV = Math.min(...vals), maxV = Math.max(...vals);
   const range = maxV - minV || 1;
 
   const pts = weekly.map((w, i) => ({
     x: PAD_L + (i / (weekly.length - 1)) * W2,
     y: PAD_T + H2 - ((w.total - minV) / range) * H2,
-    label: w.label,
-    total: w.total
+    label: w.label, total: w.total
   }));
 
-  const linePts = pts.map(p => `${p.x},${p.y}`).join(' ');
-  const areaPath = `M${pts[0].x},${pts[0].y} ` +
-    pts.slice(1).map((p,i) => {
-      const prev = pts[i];
-      const cx = (prev.x + p.x) / 2;
-      return `C${cx},${prev.y} ${cx},${p.y} ${p.x},${p.y}`;
-    }).join(' ') +
-    ` L${pts[pts.length-1].x},${PAD_T+H2} L${pts[0].x},${PAD_T+H2} Z`;
-
-  const linePath = `M${pts[0].x},${pts[0].y} ` +
-    pts.slice(1).map((p,i) => {
-      const prev = pts[i];
-      const cx = (prev.x + p.x) / 2;
-      return `C${cx},${prev.y} ${cx},${p.y} ${p.x},${p.y}`;
-    }).join(' ');
+  const areaPath = `M${pts[0].x},${pts[0].y} ` + pts.slice(1).map((p,i) => `C${(pts[i].x + p.x)/2},${pts[i].y} ${(pts[i].x + p.x)/2},${p.y} ${p.x},${p.y}`).join(' ') + ` L${pts[pts.length-1].x},${PAD_T+H2} L${pts[0].x},${PAD_T+H2} Z`;
+  const linePath = `M${pts[0].x},${pts[0].y} ` + pts.slice(1).map((p,i) => `C${(pts[i].x + p.x)/2},${pts[i].y} ${(pts[i].x + p.x)/2},${p.y} ${p.x},${p.y}`).join(' ');
 
   const labelIdxs = [0, Math.floor((weekly.length-1)/2), weekly.length-1];
-  const xlabels = [...new Set(labelIdxs)].map(i =>
-    `<text x="${pts[i].x}" y="${H-3}" text-anchor="middle"
-      fill="rgba(255,255,255,0.35)" font-family="Nunito,sans-serif" font-size="8" font-weight="700">${weekly[i].label}</text>`
-  ).join('');
-
-  const ymid = (minV + maxV) / 2;
-  const ylabels = [minV, maxV].map((v, i) => {
-    const y = i === 0 ? PAD_T + H2 : PAD_T;
-    return `<text x="${PAD_L - 3}" y="${y}" text-anchor="end" dominant-baseline="middle"
-      fill="rgba(255,255,255,0.3)" font-family="Nunito,sans-serif" font-size="8" font-weight="700">$${v.toFixed(0)}</text>`;
-  }).join('');
+  const xlabels = [...new Set(labelIdxs)].map(i => `<text x="${pts[i].x}" y="${H-3}" text-anchor="middle" fill="rgba(255,255,255,0.35)" font-family="Nunito,sans-serif" font-size="8" font-weight="700">${weekly[i].label}</text>`).join('');
+  const ylabels = [minV, maxV].map((v, i) => `<text x="${PAD_L - 3}" y="${i===0 ? PAD_T+H2 : PAD_T}" text-anchor="end" dominant-baseline="middle" fill="rgba(255,255,255,0.3)" font-family="Nunito,sans-serif" font-size="8" font-weight="700">$${v.toFixed(0)}</text>`).join('');
 
   const last = pts[pts.length - 1];
-  const dotGlow = `<circle cx="${last.x}" cy="${last.y}" r="6" fill="rgba(255,215,0,0.15)"/>
-    <circle cx="${last.x}" cy="${last.y}" r="3.5" fill="#FFD700"/>`;
-
   svg.innerHTML = `
-    <defs>
-      <linearGradient id="trendGrad" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="rgba(255,215,0,0.35)"/>
-        <stop offset="100%" stop-color="rgba(255,215,0,0.0)"/>
-      </linearGradient>
-    </defs>
-    <line x1="${PAD_L}" y1="${PAD_T + H2}" x2="${PAD_L + W2}" y2="${PAD_T + H2}"
-      stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
-    <line x1="${PAD_L}" y1="${PAD_T}" x2="${PAD_L + W2}" y2="${PAD_T}"
-      stroke="rgba(255,255,255,0.05)" stroke-width="1" stroke-dasharray="3,3"/>
+    <defs><linearGradient id="trendGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="rgba(255,215,0,0.35)"/><stop offset="100%" stop-color="rgba(255,215,0,0.0)"/></linearGradient></defs>
+    <line x1="${PAD_L}" y1="${PAD_T + H2}" x2="${PAD_L + W2}" y2="${PAD_T + H2}" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+    <line x1="${PAD_L}" y1="${PAD_T}" x2="${PAD_L + W2}" y2="${PAD_T}" stroke="rgba(255,255,255,0.05)" stroke-width="1" stroke-dasharray="3,3"/>
     <path d="${areaPath}" fill="url(#trendGrad)"/>
     <path d="${linePath}" fill="none" stroke="#FFD700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
     ${pts.map(p => `<circle cx="${p.x}" cy="${p.y}" r="2" fill="rgba(255,215,0,0.6)"/>`).join('')}
-    ${dotGlow}
-    ${xlabels}
-    ${ylabels}
+    <circle cx="${last.x}" cy="${last.y}" r="6" fill="rgba(255,215,0,0.15)"/><circle cx="${last.x}" cy="${last.y}" r="3.5" fill="#FFD700"/>
+    ${xlabels}${ylabels}
   `;
 }
 
@@ -1415,15 +1368,7 @@ function confettiBurst() {
   for (let i = 0; i < 18; i++) {
     const p = document.createElement('div');
     const size = 6 + Math.random() * 8;
-    p.style.cssText = `
-      position:absolute;
-      width:${size}px;height:${size}px;
-      background:${colors[Math.floor(Math.random()*colors.length)]};
-      border-radius:${Math.random()>0.5?'50%':'3px'};
-      left:${20+Math.random()*60}%;
-      top:${40+Math.random()*20}%;
-      animation: floatUp ${0.8+Math.random()*0.6}s ease-out ${Math.random()*0.3}s forwards;
-    `;
+    p.style.cssText = `position:absolute; width:${size}px;height:${size}px; background:${colors[Math.floor(Math.random()*colors.length)]}; border-radius:${Math.random()>0.5?'50%':'3px'}; left:${20+Math.random()*60}%; top:${40+Math.random()*20}%; animation: floatUp ${0.8+Math.random()*0.6}s ease-out ${Math.random()*0.3}s forwards;`;
     canvas.appendChild(p);
   }
   setTimeout(() => canvas.remove(), 2000);
@@ -1446,12 +1391,7 @@ function doExport() {
   const text = localStorage.getItem('myjars_v2') || '';
   if (!text) { showMsg('Nothing to export yet!', 'err'); return; }
   document.getElementById('backup-text').value = text;
-  navigator.clipboard.writeText(text).then(() => {
-    showMsg('✅ Copied! Paste it into Notes to save.', 'ok');
-  }).catch(() => {
-    document.getElementById('backup-text').select();
-    showMsg('📋 Select all text above and copy manually.', 'ok');
-  });
+  navigator.clipboard.writeText(text).then(() => showMsg('✅ Copied! Paste it into Notes to save.', 'ok')).catch(() => { document.getElementById('backup-text').select(); showMsg('📋 Select all text above and copy manually.', 'ok'); });
 }
 function doImport() {
   const text = document.getElementById('backup-text').value.trim();
@@ -1464,14 +1404,11 @@ function doImport() {
     setTab(state.activeJar); 
     showMsg('✅ Restored successfully!', 'ok');
     setTimeout(closeBackup, 1200);
-  } catch(e) {
-    showMsg('❌ Invalid backup text. Try again.', 'err');
-  }
+  } catch(e) { showMsg('❌ Invalid backup text. Try again.', 'err'); }
 }
 function showMsg(msg, type) {
   const el = document.getElementById('backup-msg');
-  el.textContent = msg;
-  el.className = 'backup-msg ' + type;
+  el.textContent = msg; el.className = 'backup-msg ' + type;
 }
 
 // ─── RESET / PIN ──────────────────────────────────────────────────────────
@@ -1480,31 +1417,12 @@ let pinEntry = '';
 
 function togglePinPad() {
   const sec = document.getElementById('pin-section');
-  const visible = sec.style.display !== 'none';
-  sec.style.display = visible ? 'none' : 'flex';
-  pinEntry = '';
-  updatePinDots();
-  document.getElementById('pin-msg').textContent = '';
+  sec.style.display = sec.style.display !== 'none' ? 'none' : 'flex';
+  pinEntry = ''; updatePinDots(); document.getElementById('pin-msg').textContent = '';
 }
-
-function pinKey(digit) {
-  if (pinEntry.length >= 8) return;
-  pinEntry += digit;
-  updatePinDots();
-}
-
-function pinClear() {
-  pinEntry = pinEntry.slice(0, -1);
-  updatePinDots();
-}
-
-function updatePinDots() {
-  for (let i = 0; i < 8; i++) {
-    const dot = document.getElementById('pd' + i);
-    dot.classList.toggle('filled', i < pinEntry.length);
-  }
-}
-
+function pinKey(digit) { if (pinEntry.length < 8) { pinEntry += digit; updatePinDots(); } }
+function pinClear() { pinEntry = pinEntry.slice(0, -1); updatePinDots(); }
+function updatePinDots() { for (let i = 0; i < 8; i++) document.getElementById('pd' + i).classList.toggle('filled', i < pinEntry.length); }
 function pinSubmit() {
   if (pinEntry === PASSCODE) {
     localStorage.removeItem('myjars_v2');
@@ -1515,17 +1433,10 @@ function pinSubmit() {
     showMsg('All data has been reset.', 'ok');
     setTimeout(closeBackup, 1400);
   } else {
-    pinEntry = '';
-    updatePinDots();
-    const dots = document.querySelectorAll('.pin-dot');
-    dots.forEach(d => {
-      d.style.animation = 'none';
-      void d.offsetWidth;
-      d.style.animation = 'pinShake 0.35s ease';
-    });
+    pinEntry = ''; updatePinDots();
+    document.querySelectorAll('.pin-dot').forEach(d => { d.style.animation = 'none'; void d.offsetWidth; d.style.animation = 'pinShake 0.35s ease'; });
     const msgEl = document.getElementById('pin-msg');
-    msgEl.textContent = 'Wrong passcode';
-    msgEl.className = 'backup-msg err';
+    msgEl.textContent = 'Wrong passcode'; msgEl.className = 'backup-msg err';
     setTimeout(() => { msgEl.textContent = ''; }, 1500);
   }
 }
@@ -1535,11 +1446,8 @@ buildGrid();
 runMarketUpdate(); 
 setTab(state.activeJar);
 
-// ─── SERVICE WORKER ───────────────────────────────────────────────────────
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('sw.js').catch(err => console.log('SW reg failed:', err));
-  });
+  window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(err => console.log('SW reg failed:', err)));
 }
 </script>
 </body>
