@@ -12,580 +12,121 @@
 <link rel="apple-touch-icon" href="icon-192.png">
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #0f0c29;
-    --bg2: #1a1744;
-    --gold: #FFD700;
-    --gold2: #FFA500;
-    --silver: #C0C0C0;
-    --green: #00e676;
-    --pink: #ff6b9d;
-    --blue: #4fc3f7;
-    --purple: #b39ddb;
-    --jar-save: #43e97b;
-    --jar-invest: #4fc3f7;
-    --jar-spend: #f093fb;
-    --text: #fff;
-    --text2: rgba(255,255,255,0.7);
-    --card: rgba(255,255,255,0.07);
-    --card-border: rgba(255,255,255,0.12);
-    --radius: 20px;
-  }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-
-  html, body {
-    height: 100%; height: 100dvh;
-    overflow: hidden;
-    background: var(--bg);
-    font-family: 'Nunito', sans-serif;
-    color: var(--text);
-    user-select: none;
-  }
-
-  body {
-    display: flex;
-    flex-direction: column;
-    background: radial-gradient(ellipse at top, #2d1b69 0%, #0f0c29 60%);
-  }
-
-  /* Stars background */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image:
-      radial-gradient(1px 1px at 20% 30%, rgba(255,255,255,0.6) 0%, transparent 100%),
-      radial-gradient(1px 1px at 80% 10%, rgba(255,255,255,0.5) 0%, transparent 100%),
-      radial-gradient(1px 1px at 50% 60%, rgba(255,255,255,0.4) 0%, transparent 100%),
-      radial-gradient(1px 1px at 15% 80%, rgba(255,255,255,0.5) 0%, transparent 100%),
-      radial-gradient(1px 1px at 90% 70%, rgba(255,255,255,0.6) 0%, transparent 100%),
-      radial-gradient(1px 1px at 35% 15%, rgba(255,255,255,0.4) 0%, transparent 100%),
-      radial-gradient(1px 1px at 65% 85%, rgba(255,255,255,0.5) 0%, transparent 100%),
-      radial-gradient(2px 2px at 75% 40%, rgba(255,215,0,0.4) 0%, transparent 100%),
-      radial-gradient(2px 2px at 25% 55%, rgba(255,215,0,0.3) 0%, transparent 100%);
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  #app { position: relative; z-index: 1; display: flex; flex-direction: column; height: 100%; height: 100dvh; padding: 0; gap: 0; }
-
-  /* HEADER */
-  .header {
-    padding: 12px 16px 8px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-shrink: 0;
-  }
-  .header h1 {
-    font-family: 'Fredoka One', cursive;
-    font-size: 22px;
-    background: linear-gradient(135deg, var(--gold), var(--gold2));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    letter-spacing: 0.5px;
-  }
-  .header .sparkles { font-size: 22px; animation: spin 4s linear infinite; }
-  @keyframes spin { 0%,100%{transform:rotate(-10deg)} 50%{transform:rotate(10deg)} }
-
-  /* JARS ROW */
-  .jars-row {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
-    padding: 0 12px;
-    flex-shrink: 0;
-  }
-
-  .jar-card {
-    background: var(--card);
-    border: 1px solid var(--card-border);
-    border-radius: var(--radius);
-    padding: 10px 4px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    position: relative;
-    overflow: hidden;
-  }
-  .jar-card::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: var(--radius);
-    opacity: 0.08;
-  }
-  .jar-save::before { background: var(--jar-save); }
-  .jar-invest::before { background: var(--jar-invest); }
-  .jar-spend::before { background: var(--jar-spend); }
-
-  .jar-label {
-    font-size: 9px;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    opacity: 0.8;
-  }
-  .jar-save .jar-label { color: var(--jar-save); }
-  .jar-invest .jar-label { color: var(--jar-invest); }
-  .jar-spend .jar-label { color: var(--jar-spend); }
-
-  .jar-amount {
-    font-family: 'Fredoka One', cursive;
-    font-size: 18px;
-    line-height: 1;
-  }
-  .jar-save .jar-amount { color: var(--jar-save); }
-  .jar-invest .jar-amount { color: var(--jar-invest); }
-  .jar-spend .jar-amount { color: var(--jar-spend); }
-
-  .jar-visual {
-    width: 48px;
-    height: 40px;
-    position: relative;
-  }
-
-  /* SVG jar fill level */
-  .jar-svg { width: 100%; height: 100%; }
-
-  /* TOTAL BANNER */
-  .total-banner {
-    margin: 8px 12px 0;
-    background: linear-gradient(135deg, rgba(255,215,0,0.15), rgba(255,165,0,0.1));
-    border: 1px solid rgba(255,215,0,0.3);
-    border-radius: 16px;
-    padding: 8px 16px;
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 4px;
-    flex-shrink: 0;
-    overflow: hidden;
-  }
-  .total-label { font-size: 12px; font-weight: 800; color: var(--gold); opacity: 0.85; text-transform: uppercase; letter-spacing: 1px; }
-  .total-amount { font-family: 'Fredoka One', cursive; font-size: 26px; color: var(--gold); }
-
-  /* COINS GRID */
-  .coins-section {
-    flex: 0 0 auto;
-    padding: 6px 12px 0;
-    display: flex;
-    flex-direction: column;
-  }
-  .section-label {
-    font-size: 11px;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: var(--text2);
-    margin-bottom: 6px;
-  }
-  .coins-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
-    flex: 1;
-  }
-
-  .coin-tile {
-    background: var(--card);
-    border: 1px solid var(--card-border);
-    border-radius: 14px;
-    padding: 6px 4px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 2px;
-    transition: transform 0.1s;
-    cursor: pointer;
-  }
-  .coin-tile:active { transform: scale(0.95); }
-
-  .coin-icon {
-    width: 34px;
-    height: 34px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Fredoka One', cursive;
-    font-size: 10px;
-    font-weight: 900;
-    box-shadow: 0 3px 8px rgba(0,0,0,0.4), inset 0 1px 2px rgba(255,255,255,0.3);
-    position: relative;
-    overflow: hidden;
-  }
-  .coin-icon::after {
-    content: '';
-    position: absolute;
-    top: 4px; left: 8px;
-    width: 10px; height: 6px;
-    background: rgba(255,255,255,0.3);
-    border-radius: 50%;
-    transform: rotate(-30deg);
-  }
-
-  .coin-5c  .coin-icon { background: linear-gradient(135deg, #b8b8b8, #d8d8d8, #a0a0a0); color: #555; }
-  .coin-10c .coin-icon { background: linear-gradient(135deg, #c0c0c0, #e0e0e0, #a8a8a8); color: #444; }
-  .coin-20c .coin-icon { background: linear-gradient(135deg, #c8c8c8, #e8e8e8, #b0b0b0); color: #333; }
-  .coin-50c .coin-icon { background: linear-gradient(135deg, #d0d0d0, #f0f0f0, #b8b8b8); color: #333; }
-  .coin-1   .coin-icon { background: linear-gradient(135deg, #d4af37, #f0c040, #c09030); color: #7a5200; }
-  .coin-2   .coin-icon { background: linear-gradient(135deg, #c8922a, #e8aa40, #b07820); color: #5a3000; }
-
-  .note-10 .coin-icon {
-    width: 48px !important;
-    height: 24px !important;
-    border-radius: 5px !important;
-    background: linear-gradient(135deg, #1a7a4a, #25a060, #148040);
-    color: #d4ffea;
-    font-size: 11px !important;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.5), inset 0 1px 2px rgba(255,255,255,0.25);
-    border: 1px solid rgba(255,255,255,0.15);
-  }
-  .note-10 .coin-icon::after {
-    width: 12px; height: 6px; top: 2px; left: 5px;
-  }
-
-  .coin-denom {
-    font-family: 'Fredoka One', cursive;
-    font-size: 12px;
-    color: var(--text2);
-  }
-  .coin-count {
-    font-family: 'Fredoka One', cursive;
-    font-size: 16px;
-    line-height: 1;
-    color: white;
-  }
-  .coin-total-val {
-    font-size: 9px;
-    color: var(--text2);
-    font-weight: 700;
-  }
-
-  /* +/- controls */
-  .coin-controls {
-    display: flex;
-    gap: 4px;
-    align-items: center;
-  }
-  .btn-coin {
-    width: 22px; height: 22px;
-    border-radius: 50%;
-    border: none;
-    font-size: 14px;
-    font-weight: 900;
-    cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    transition: transform 0.1s, opacity 0.1s;
-    line-height: 1;
-  }
-  .btn-coin:active { transform: scale(0.88); }
-  .btn-minus { background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.8); }
-  .btn-plus  { background: linear-gradient(135deg, var(--gold), var(--gold2)); color: #000; }
-
-  /* BOTTOM: TAB TOGGLE */
-  .bottom-bar {
-    padding: 8px 12px 12px;
-    flex-shrink: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .jar-toggle {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    background: rgba(255,255,255,0.06);
-    border-radius: 50px;
-    padding: 3px;
-    gap: 3px;
-  }
-  .jar-btn {
-    border: none;
-    border-radius: 50px;
-    padding: 8px 4px;
-    font-family: 'Nunito', sans-serif;
-    font-size: 12px;
-    font-weight: 800;
-    cursor: pointer;
-    transition: all 0.2s;
-    background: transparent;
-    color: var(--text2);
-  }
-  .jar-btn.active-save {
-    background: linear-gradient(135deg, #1de9b6, #00e676);
-    color: #004d36;
-    box-shadow: 0 2px 12px rgba(0,230,118,0.4);
-  }
-  .jar-btn.active-spend {
-    background: linear-gradient(135deg, #f093fb, #f5576c);
-    color: white;
-    box-shadow: 0 2px 12px rgba(240,93,251,0.4);
-  }
-  .jar-btn.active-helped {
-    background: linear-gradient(135deg, #FFD700, #FFA500);
-    color: #5a3000;
-    box-shadow: 0 2px 12px rgba(255,215,0,0.4);
-  }
-  
-  /* INVEST TAB STYLES */
-  .jar-btn.active-invest {
-    background: linear-gradient(135deg, #4fc3f7, #0288d1);
-    color: white;
-    box-shadow: 0 2px 12px rgba(79,195,247,0.4);
-  }
-  .stock-card {
-    background: var(--card); border: 1px solid var(--card-border);
-    border-radius: 16px; padding: 12px;
-    display: flex; align-items: center; justify-content: space-between;
-  }
-  .stock-info { display: flex; align-items: center; gap: 10px; }
-  .stock-icon { font-size: 24px; background: rgba(255,255,255,0.1); width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 12px; }
-  .stock-name { font-family: 'Fredoka One', cursive; font-size: 14px; color: white; }
-  .stock-price { font-size: 12px; font-weight: 800; color: var(--text2); }
-  .stock-change.up { color: var(--green); }
-  .stock-change.down { color: #ff6b6b; }
-  .stock-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
-  .stock-shares { font-size: 11px; font-weight: 800; color: var(--gold); background: rgba(255,215,0,0.1); padding: 2px 8px; border-radius: 8px;}
-  .btn-trade { background: rgba(255,255,255,0.1); border: none; color: white; padding: 6px 16px; border-radius: 8px; font-family: 'Fredoka One'; font-size: 11px; cursor: pointer; transition: transform 0.1s;}
-  .btn-trade:active { transform: scale(0.9); }
-
-  /* SWIPEABLE CAROUSEL (CHART & HISTORY) */
-  .carousel-section {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    min-height: 0;
-    padding-top: 6px;
-  }
-  .carousel-viewport {
-    flex: 1;
-    display: flex;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-    min-height: 0;
-  }
-  .carousel-viewport::-webkit-scrollbar { display: none; }
-  
-  .carousel-slide {
-    flex: 0 0 100%;
-    scroll-snap-align: center;
-    padding: 0 12px;
-    display: flex;
-    flex-direction: column;
-    min-height: 0;
-  }
-
-  .carousel-dots {
-    display: flex;
-    justify-content: center;
-    gap: 6px;
-    margin-top: 6px;
-    margin-bottom: 2px;
-  }
-  .carousel-dot {
-    width: 6px; height: 6px; border-radius: 50%;
-    background: rgba(255,255,255,0.2);
-    transition: background 0.2s, transform 0.2s;
-  }
-  .carousel-dot.active {
-    background: var(--gold);
-    transform: scale(1.2);
-  }
-
-  .trend-card {
-    flex: 1;
-    background: var(--card);
-    border: 1px solid var(--card-border);
-    border-radius: 18px;
-    padding: 10px 12px 8px;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    min-height: 0;
-  }
-  .trend-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .trend-label {
-    font-size: 10px;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: var(--text2);
-  }
-  .trend-latest {
-    font-family: 'Fredoka One', cursive;
-    font-size: 14px;
-    color: var(--gold);
-  }
-  #trend-svg {
-    flex: 1;
-    width: 100%;
-    min-height: 0;
-    overflow: visible;
-  }
-
-  /* HISTORY LIST UI */
-  .help-list {
-    flex: 1;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    margin-top: 4px;
-    padding-bottom: 4px;
-  }
-  .help-list::-webkit-scrollbar { display: none; }
-  .help-item {
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 12px;
-    padding: 8px 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-  }
-  .help-date {
-    font-size: 9px;
-    font-weight: 800;
-    color: var(--gold);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-  .help-text {
-    font-size: 13px;
-    color: white;
-    line-height: 1.3;
-  }
-  .help-empty {
-    text-align: center;
-    color: rgba(255,255,255,0.4);
-    font-size: 11px;
-    font-weight: 700;
-    margin-top: 20px;
-    line-height: 1.5;
-  }
-
-  /* I HELPED SECTION */
-  .helped-section {
-    flex: 1;
-    padding: 6px 12px 0;
-    display: none;
-    flex-direction: column;
-    min-height: 0;
-  }
-  .helped-card {
-    flex: 1;
-    background: var(--card);
-    border: 1px solid var(--card-border);
-    border-radius: 18px;
-    padding: 14px 16px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 10px;
-    min-height: 0;
-  }
-  .helped-input {
-    width: 100%;
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.15);
-    border-radius: 12px;
-    color: white;
-    font-family: 'Nunito', sans-serif;
-    font-size: 14px;
-    padding: 10px 12px;
-    outline: none;
-  }
-  .helped-input::placeholder { color: rgba(255,255,255,0.3); }
-
-  /* Animations */
-  @keyframes coinDrop {
-    0%   { transform: translateY(-30px) scale(1.3); opacity: 0; }
-    60%  { transform: translateY(4px) scale(0.95); opacity: 1; }
-    80%  { transform: translateY(-3px) scale(1.02); }
-    100% { transform: translateY(0) scale(1); opacity: 1; }
-  }
-  .coin-tile.just-added .coin-icon {
-    animation: coinDrop 0.4s cubic-bezier(.17,.67,.35,1.2);
-  }
-
-  .confetti {
-    position: fixed; pointer-events: none; z-index: 999;
-    top: 0; left: 0; right: 0; bottom: 0;
-  }
-  @keyframes floatUp {
-    0%   { transform: translateY(0) rotate(0deg); opacity: 1; }
-    100% { transform: translateY(-80vh) rotate(720deg); opacity: 0; }
-  }
-
-  /* Modal Styles */
-  .modal-overlay {
-    display: none; position: fixed; inset: 0; z-index: 9999;
-    background: rgba(0,0,0,0.7); backdrop-filter: blur(6px);
-    align-items: center; justify-content: center;
-  }
-  .modal-overlay.open { display: flex; }
-  .modal-box {
-    background: #1a1744; border: 1px solid rgba(255,255,255,0.15);
-    border-radius: 24px; padding: 22px 20px 18px; width: calc(100vw - 40px);
-    max-width: 360px; display: flex; flex-direction: column; gap: 12px;
-  }
-  .modal-title { font-family: 'Fredoka One', cursive; font-size: 18px; color: var(--gold); }
-  .modal-desc  { font-size: 12px; color: var(--text2); line-height: 1.5; }
-  .backup-textarea {
-    width: 100%; height: 90px; background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; color: white;
-    font-family: monospace; font-size: 11px; padding: 10px; resize: none; outline: none;
-  }
-  .modal-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-  .modal-btn {
-    border: none; border-radius: 12px; padding: 10px 6px;
-    font-family: 'Nunito', sans-serif; font-size: 12px; font-weight: 800;
-    cursor: pointer; transition: transform 0.1s;
-  }
-  .modal-btn:active { transform: scale(0.95); }
-  .btn-export { background: rgba(255,215,0,0.15); color: var(--gold); border: 1px solid rgba(255,215,0,0.3); }
-  .btn-import { background: rgba(79,195,247,0.15); color: var(--blue); border: 1px solid rgba(79,195,247,0.3); }
-  .backup-msg { font-size: 11px; font-weight: 700; text-align: center; min-height: 16px; }
-  .backup-msg.ok  { color: var(--green); }
-  .backup-msg.err { color: #ff6b6b; }
-  .modal-close {
-    background: none; border: 1px solid rgba(255,255,255,0.12); color: var(--text2); 
-    border-radius: 10px; padding: 7px; font-size: 12px; font-weight: 700; cursor: pointer; width: 100%;
-  }
-  .reset-divider { height: 1px; background: rgba(255,255,255,0.08); margin: 2px 0; }
-  .btn-reset { background: rgba(255,80,80,0.1); color: #ff6b6b; border: 1px solid rgba(255,80,80,0.25); width: 100%; }
-  .btn-reset:active { transform: scale(0.97); }
-
-  /* PIN pad */
-  .pin-section { display: flex; flex-direction: column; gap: 8px; align-items: center; }
-  .pin-label { font-size: 11px; font-weight: 800; color: var(--text2); letter-spacing: 0.5px; }
-  .pin-dots { display: flex; gap: 8px; align-items: center; justify-content: center; }
-  .pin-dot {
-    width: 10px; height: 10px; border-radius: 50%;
-    background: rgba(255,255,255,0.15); border: 1.5px solid rgba(255,255,255,0.25);
-    transition: background 0.15s, border-color 0.15s;
-  }
-  .pin-dot.filled { background: #ff6b6b; border-color: #ff6b6b; box-shadow: 0 0 6px rgba(255,80,80,0.5); }
-  @keyframes pinShake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-4px)} 60%{transform:translateX(4px)} }
-  .pin-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; width: 100%; }
-  .pin-key {
-    background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1);
-    color: white; font-family: "Fredoka One", cursive; font-size: 18px;
-    border-radius: 10px; padding: 9px 0; cursor: pointer; transition: transform 0.1s, background 0.1s;
-  }
-  .pin-key:active { transform: scale(0.9); background: rgba(255,255,255,0.15); }
-  .pin-key-clear { color: #ff9999; font-family: "Nunito", sans-serif; font-size: 16px; }
-  .pin-key-ok { background: rgba(255,80,80,0.2); color: #ff6b6b; border-color: rgba(255,80,80,0.3); }
+:root{--bg:#0f0c29;--bg2:#1a1744;--gold:#FFD700;--gold2:#FFA500;--green:#00e676;--blue:#4fc3f7;--jar-save:#43e97b;--jar-invest:#4fc3f7;--jar-spend:#f093fb;--text:#fff;--text2:rgba(255,255,255,0.7);--card:rgba(255,255,255,0.07);--cb:rgba(255,255,255,0.12);--r:20px}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;height:100dvh;overflow:hidden;background:var(--bg);font-family:'Nunito',sans-serif;color:var(--text);user-select:none}
+body{display:flex;flex-direction:column;background:radial-gradient(ellipse at top,#2d1b69 0%,#0f0c29 60%)}
+body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(1px 1px at 20% 30%,rgba(255,255,255,0.6) 0%,transparent 100%),radial-gradient(1px 1px at 80% 10%,rgba(255,255,255,0.5) 0%,transparent 100%),radial-gradient(1px 1px at 50% 60%,rgba(255,255,255,0.4) 0%,transparent 100%),radial-gradient(1px 1px at 15% 80%,rgba(255,255,255,0.5) 0%,transparent 100%),radial-gradient(1px 1px at 90% 70%,rgba(255,255,255,0.6) 0%,transparent 100%),radial-gradient(1px 1px at 35% 15%,rgba(255,255,255,0.4) 0%,transparent 100%),radial-gradient(1px 1px at 65% 85%,rgba(255,255,255,0.5) 0%,transparent 100%),radial-gradient(2px 2px at 75% 40%,rgba(255,215,0,0.4) 0%,transparent 100%),radial-gradient(2px 2px at 25% 55%,rgba(255,215,0,0.3) 0%,transparent 100%);pointer-events:none;z-index:0}
+#app{position:relative;z-index:1;display:flex;flex-direction:column;height:100%;height:100dvh}
+.header{padding:12px 16px 8px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.header h1{font-family:'Fredoka One',cursive;font-size:22px;background:linear-gradient(135deg,var(--gold),var(--gold2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:.5px}
+.header .sparkles{font-size:22px;animation:spin 4s linear infinite}
+@keyframes spin{0%,100%{transform:rotate(-10deg)}50%{transform:rotate(10deg)}}
+.jars-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:0 12px;flex-shrink:0}
+.jar-card{background:var(--card);border:1px solid var(--cb);border-radius:var(--r);padding:10px 4px;display:flex;flex-direction:column;align-items:center;gap:4px;position:relative;overflow:hidden}
+.jar-card::before{content:'';position:absolute;inset:0;border-radius:var(--r);opacity:.08}
+.jar-save::before{background:var(--jar-save)}.jar-invest::before{background:var(--jar-invest)}.jar-spend::before{background:var(--jar-spend)}
+.jar-label{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;opacity:.8}
+.jar-save .jar-label{color:var(--jar-save)}.jar-invest .jar-label{color:var(--jar-invest)}.jar-spend .jar-label{color:var(--jar-spend)}
+.jar-amount{font-family:'Fredoka One',cursive;font-size:18px;line-height:1}
+.jar-save .jar-amount{color:var(--jar-save)}.jar-invest .jar-amount{color:var(--jar-invest)}.jar-spend .jar-amount{color:var(--jar-spend)}
+.jar-visual{width:48px;height:40px}.jar-svg{width:100%;height:100%}
+.total-banner{margin:8px 12px 0;background:linear-gradient(135deg,rgba(255,215,0,0.15),rgba(255,165,0,0.1));border:1px solid rgba(255,215,0,0.3);border-radius:16px;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.total-label{font-size:12px;font-weight:800;color:var(--gold);opacity:.85;text-transform:uppercase;letter-spacing:1px}
+.total-amount{font-family:'Fredoka One',cursive;font-size:26px;color:var(--gold)}
+.coins-section{flex:0 0 auto;padding:6px 12px 0;display:flex;flex-direction:column}
+.section-label{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--text2);margin-bottom:6px}
+.coins-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;flex:1}
+.coin-tile{background:var(--card);border:1px solid var(--cb);border-radius:14px;padding:6px 4px;display:flex;flex-direction:column;align-items:center;gap:2px;transition:transform .1s;cursor:pointer}
+.coin-tile:active{transform:scale(.95)}
+.coin-icon{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Fredoka One',cursive;font-size:10px;font-weight:900;box-shadow:0 3px 8px rgba(0,0,0,0.4),inset 0 1px 2px rgba(255,255,255,0.3);position:relative;overflow:hidden}
+.coin-icon::after{content:'';position:absolute;top:4px;left:8px;width:10px;height:6px;background:rgba(255,255,255,0.3);border-radius:50%;transform:rotate(-30deg)}
+.coin-10c .coin-icon{background:linear-gradient(135deg,#c0c0c0,#e0e0e0,#a8a8a8);color:#444}
+.coin-20c .coin-icon{background:linear-gradient(135deg,#c8c8c8,#e8e8e8,#b0b0b0);color:#333}
+.coin-50c .coin-icon{background:linear-gradient(135deg,#d0d0d0,#f0f0f0,#b8b8b8);color:#333}
+.coin-1   .coin-icon{background:linear-gradient(135deg,#d4af37,#f0c040,#c09030);color:#7a5200}
+.coin-2   .coin-icon{background:linear-gradient(135deg,#c8922a,#e8aa40,#b07820);color:#5a3000}
+.note-10 .coin-icon{width:48px!important;height:24px!important;border-radius:5px!important;background:linear-gradient(135deg,#1a7a4a,#25a060,#148040);color:#d4ffea;font-size:11px!important;box-shadow:0 3px 10px rgba(0,0,0,0.5),inset 0 1px 2px rgba(255,255,255,0.25);border:1px solid rgba(255,255,255,0.15)}
+.note-10 .coin-icon::after{width:12px;height:6px;top:2px;left:5px}
+.coin-denom{font-family:'Fredoka One',cursive;font-size:12px;color:var(--text2)}
+.coin-count{font-family:'Fredoka One',cursive;font-size:16px;line-height:1;color:#fff}
+.coin-total-val{font-size:9px;color:var(--text2);font-weight:700}
+.coin-controls{display:flex;gap:4px;align-items:center}
+.btn-coin{width:22px;height:22px;border-radius:50%;border:none;font-size:14px;font-weight:900;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .1s,opacity .1s;line-height:1}
+.btn-coin:active{transform:scale(.88)}
+.btn-minus{background:rgba(255,255,255,0.12);color:rgba(255,255,255,0.8)}
+.btn-plus{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#000}
+.bottom-bar{padding:8px 12px 12px;flex-shrink:0;display:flex;flex-direction:column;gap:8px}
+.jar-toggle{display:grid;grid-template-columns:repeat(4,1fr);background:rgba(255,255,255,0.06);border-radius:50px;padding:3px;gap:3px}
+.jar-btn{border:none;border-radius:50px;padding:8px 4px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:800;cursor:pointer;transition:all .2s;background:transparent;color:var(--text2)}
+.jar-btn.active-save{background:linear-gradient(135deg,#1de9b6,#00e676);color:#004d36;box-shadow:0 2px 12px rgba(0,230,118,0.4)}
+.jar-btn.active-spend{background:linear-gradient(135deg,#f093fb,#f5576c);color:#fff;box-shadow:0 2px 12px rgba(240,93,251,0.4)}
+.jar-btn.active-helped{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#5a3000;box-shadow:0 2px 12px rgba(255,215,0,0.4)}
+.jar-btn.active-invest{background:linear-gradient(135deg,var(--blue),#0288d1);color:#fff;box-shadow:0 2px 12px rgba(79,195,247,0.4)}
+.stock-card{background:var(--card);border:1px solid var(--cb);border-radius:16px;padding:12px;display:flex;align-items:center;justify-content:space-between}
+.stock-info{display:flex;align-items:center;gap:10px}
+.stock-icon{font-size:24px;background:rgba(255,255,255,0.1);width:40px;height:40px;display:flex;align-items:center;justify-content:center;border-radius:12px}
+.stock-name{font-family:'Fredoka One',cursive;font-size:14px;color:#fff}
+.stock-price{font-size:12px;font-weight:800;color:var(--text2)}
+.stock-change.up{color:var(--green)}.stock-change.down{color:#ff6b6b}
+.stock-actions{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.stock-shares{font-size:11px;font-weight:800;color:var(--gold);background:rgba(255,215,0,0.1);padding:2px 8px;border-radius:8px}
+.btn-trade{background:rgba(255,255,255,0.1);border:none;color:#fff;padding:6px 16px;border-radius:8px;font-family:'Fredoka One';font-size:11px;cursor:pointer;transition:transform .1s}
+.btn-trade:active{transform:scale(.9)}
+.carousel-section{flex:1;display:flex;flex-direction:column;min-height:0;padding-top:6px}
+.carousel-viewport{flex:1;display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;-ms-overflow-style:none;min-height:0}
+.carousel-viewport::-webkit-scrollbar{display:none}
+.carousel-slide{flex:0 0 100%;scroll-snap-align:center;padding:0 12px;display:flex;flex-direction:column;min-height:0}
+.carousel-dots{display:flex;justify-content:center;gap:6px;margin-top:6px;margin-bottom:2px}
+.carousel-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.2);transition:background .2s,transform .2s}
+.carousel-dot.active{background:var(--gold);transform:scale(1.2)}
+.trend-card{flex:1;background:var(--card);border:1px solid var(--cb);border-radius:18px;padding:10px 12px 8px;display:flex;flex-direction:column;gap:4px;min-height:0}
+.trend-header{display:flex;align-items:center;justify-content:space-between}
+.trend-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--text2)}
+.trend-latest{font-family:'Fredoka One',cursive;font-size:14px;color:var(--gold)}
+#trend-svg{flex:1;width:100%;min-height:0;overflow:visible}
+.help-list{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:6px;margin-top:4px;padding-bottom:4px}
+.help-list::-webkit-scrollbar{display:none}
+.help-item{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:8px 12px;display:flex;flex-direction:column;gap:3px}
+.help-date{font-size:9px;font-weight:800;color:var(--gold);text-transform:uppercase;letter-spacing:.5px}
+.help-text{font-size:13px;color:#fff;line-height:1.3}
+.help-empty{text-align:center;color:rgba(255,255,255,0.4);font-size:11px;font-weight:700;margin-top:20px;line-height:1.5}
+.helped-section{flex:1;padding:6px 12px 0;display:none;flex-direction:column;min-height:0}
+.helped-card{flex:1;background:var(--card);border:1px solid var(--cb);border-radius:18px;padding:14px 16px;display:flex;flex-direction:column;justify-content:center;gap:10px;min-height:0}
+.helped-input{width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);border-radius:12px;color:#fff;font-family:'Nunito',sans-serif;font-size:14px;padding:10px 12px;outline:none}
+.helped-input::placeholder{color:rgba(255,255,255,0.3)}
+@keyframes coinDrop{0%{transform:translateY(-30px) scale(1.3);opacity:0}60%{transform:translateY(4px) scale(.95);opacity:1}80%{transform:translateY(-3px) scale(1.02)}100%{transform:translateY(0) scale(1);opacity:1}}
+.coin-tile.just-added .coin-icon{animation:coinDrop .4s cubic-bezier(.17,.67,.35,1.2)}
+.confetti{position:fixed;pointer-events:none;z-index:999;top:0;left:0;right:0;bottom:0}
+@keyframes floatUp{0%{transform:translateY(0) rotate(0deg);opacity:1}100%{transform:translateY(-80vh) rotate(720deg);opacity:0}}
+.modal-overlay{display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.7);backdrop-filter:blur(6px);align-items:center;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal-box{background:#1a1744;border:1px solid rgba(255,255,255,0.15);border-radius:24px;padding:22px 20px 18px;width:calc(100vw - 40px);max-width:360px;display:flex;flex-direction:column;gap:12px}
+.modal-title{font-family:'Fredoka One',cursive;font-size:18px;color:var(--gold)}
+.modal-desc{font-size:12px;color:var(--text2);line-height:1.5}
+.backup-textarea{width:100%;height:90px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);border-radius:12px;color:#fff;font-family:monospace;font-size:11px;padding:10px;resize:none;outline:none}
+.modal-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.modal-btn{border:none;border-radius:12px;padding:10px 6px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:800;cursor:pointer;transition:transform .1s}
+.modal-btn:active{transform:scale(.95)}
+.btn-export{background:rgba(255,215,0,0.15);color:var(--gold);border:1px solid rgba(255,215,0,0.3)}
+.btn-import{background:rgba(79,195,247,0.15);color:var(--blue);border:1px solid rgba(79,195,247,0.3)}
+.backup-msg{font-size:11px;font-weight:700;text-align:center;min-height:16px}
+.backup-msg.ok{color:var(--green)}.backup-msg.err{color:#ff6b6b}
+.modal-close{background:none;border:1px solid rgba(255,255,255,0.12);color:var(--text2);border-radius:10px;padding:7px;font-size:12px;font-weight:700;cursor:pointer;width:100%}
+.reset-divider{height:1px;background:rgba(255,255,255,0.08);margin:2px 0}
+.btn-reset{background:rgba(255,80,80,0.1);color:#ff6b6b;border:1px solid rgba(255,80,80,0.25);width:100%}
+.btn-reset:active{transform:scale(.97)}
+.pin-section{display:flex;flex-direction:column;gap:8px;align-items:center}
+.pin-label{font-size:11px;font-weight:800;color:var(--text2);letter-spacing:.5px}
+.pin-dots{display:flex;gap:8px;align-items:center;justify-content:center}
+.pin-dot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.15);border:1.5px solid rgba(255,255,255,0.25);transition:background .15s,border-color .15s}
+.pin-dot.filled{background:#ff6b6b;border-color:#ff6b6b;box-shadow:0 0 6px rgba(255,80,80,0.5)}
+@keyframes pinShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-4px)}60%{transform:translateX(4px)}}
+.pin-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;width:100%}
+.pin-key{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);color:#fff;font-family:'Fredoka One',cursive;font-size:18px;border-radius:10px;padding:9px 0;cursor:pointer;transition:transform .1s,background .1s}
+.pin-key:active{transform:scale(.9);background:rgba(255,255,255,0.15)}
+.pin-key-clear{color:#ff9999;font-family:'Nunito',sans-serif;font-size:16px}
+.pin-key-ok{background:rgba(255,80,80,0.2);color:#ff6b6b;border-color:rgba(255,80,80,0.3)}
 </style>
 </head>
 <body>
@@ -594,7 +135,7 @@
   <div class="header">
     <h1>🪙 My Money Jar</h1>
     <div style="display:flex;align-items:center;gap:10px">
-      <button class="backup-btn" style="background: none; border: none; color: white; font-size: 20px;" onclick="openBackup()" title="Backup">⋯</button>
+      <button style="background:none;border:none;color:#fff;font-size:20px" onclick="openBackup()">⋯</button>
       <span class="sparkles">✨</span>
     </div>
   </div>
@@ -611,7 +152,6 @@
       <div id="backup-msg" class="backup-msg"></div>
       <div class="reset-divider"></div>
       <button class="modal-btn btn-reset" onclick="togglePinPad()">🗑️ Reset All Data</button>
-
       <div id="pin-section" class="pin-section" style="display:none">
         <div class="pin-label">Enter passcode to reset</div>
         <div class="pin-dots" id="pin-dots">
@@ -621,18 +161,10 @@
           <span class="pin-dot" id="pd6"></span><span class="pin-dot" id="pd7"></span>
         </div>
         <div class="pin-grid">
-          <button class="pin-key" onclick="pinKey('1')">1</button>
-          <button class="pin-key" onclick="pinKey('2')">2</button>
-          <button class="pin-key" onclick="pinKey('3')">3</button>
-          <button class="pin-key" onclick="pinKey('4')">4</button>
-          <button class="pin-key" onclick="pinKey('5')">5</button>
-          <button class="pin-key" onclick="pinKey('6')">6</button>
-          <button class="pin-key" onclick="pinKey('7')">7</button>
-          <button class="pin-key" onclick="pinKey('8')">8</button>
-          <button class="pin-key" onclick="pinKey('9')">9</button>
-          <button class="pin-key pin-key-clear" onclick="pinClear()">⌫</button>
-          <button class="pin-key" onclick="pinKey('0')">0</button>
-          <button class="pin-key pin-key-ok" onclick="pinSubmit()">✓</button>
+          <button class="pin-key" onclick="pinKey('1')">1</button><button class="pin-key" onclick="pinKey('2')">2</button><button class="pin-key" onclick="pinKey('3')">3</button>
+          <button class="pin-key" onclick="pinKey('4')">4</button><button class="pin-key" onclick="pinKey('5')">5</button><button class="pin-key" onclick="pinKey('6')">6</button>
+          <button class="pin-key" onclick="pinKey('7')">7</button><button class="pin-key" onclick="pinKey('8')">8</button><button class="pin-key" onclick="pinKey('9')">9</button>
+          <button class="pin-key pin-key-clear" onclick="pinClear()">⌫</button><button class="pin-key" onclick="pinKey('0')">0</button><button class="pin-key pin-key-ok" onclick="pinSubmit()">✓</button>
         </div>
         <div id="pin-msg" class="backup-msg"></div>
       </div>
@@ -646,24 +178,14 @@
       <div class="modal-desc">Enter passcode to approve this transaction.</div>
       <div class="pin-section">
         <div class="pin-dots" id="approve-pin-dots">
-          <span class="pin-dot" id="apd0"></span>
-          <span class="pin-dot" id="apd1"></span>
-          <span class="pin-dot" id="apd2"></span>
-          <span class="pin-dot" id="apd3"></span>
+          <span class="pin-dot" id="apd0"></span><span class="pin-dot" id="apd1"></span>
+          <span class="pin-dot" id="apd2"></span><span class="pin-dot" id="apd3"></span>
         </div>
         <div class="pin-grid">
-          <button class="pin-key" onclick="apprKey('1')">1</button>
-          <button class="pin-key" onclick="apprKey('2')">2</button>
-          <button class="pin-key" onclick="apprKey('3')">3</button>
-          <button class="pin-key" onclick="apprKey('4')">4</button>
-          <button class="pin-key" onclick="apprKey('5')">5</button>
-          <button class="pin-key" onclick="apprKey('6')">6</button>
-          <button class="pin-key" onclick="apprKey('7')">7</button>
-          <button class="pin-key" onclick="apprKey('8')">8</button>
-          <button class="pin-key" onclick="apprKey('9')">9</button>
-          <button class="pin-key pin-key-clear" onclick="apprClear()">⌫</button>
-          <button class="pin-key" onclick="apprKey('0')">0</button>
-          <button class="pin-key pin-key-ok" onclick="apprSubmit()">✓</button>
+          <button class="pin-key" onclick="apprKey('1')">1</button><button class="pin-key" onclick="apprKey('2')">2</button><button class="pin-key" onclick="apprKey('3')">3</button>
+          <button class="pin-key" onclick="apprKey('4')">4</button><button class="pin-key" onclick="apprKey('5')">5</button><button class="pin-key" onclick="apprKey('6')">6</button>
+          <button class="pin-key" onclick="apprKey('7')">7</button><button class="pin-key" onclick="apprKey('8')">8</button><button class="pin-key" onclick="apprKey('9')">9</button>
+          <button class="pin-key pin-key-clear" onclick="apprClear()">⌫</button><button class="pin-key" onclick="apprKey('0')">0</button><button class="pin-key pin-key-ok" onclick="apprSubmit()">✓</button>
         </div>
         <div id="approve-msg" class="backup-msg"></div>
       </div>
@@ -671,65 +193,54 @@
     </div>
   </div>
 
+  <!-- Shared SVG defs (single definition for all 3 jars) -->
+  <svg width="0" height="0" style="position:absolute">
+    <defs>
+      <linearGradient id="saveGrad" x1="0" y1="0" x2="0" y2="1" gradientUnits="objectBoundingBox">
+        <stop offset="0%" stop-color="#1de9b6"/><stop offset="100%" stop-color="#00e676"/>
+      </linearGradient>
+      <linearGradient id="investGrad" x1="0" y1="0" x2="0" y2="1" gradientUnits="objectBoundingBox">
+        <stop offset="0%" stop-color="#4fc3f7"/><stop offset="100%" stop-color="#0288d1"/>
+      </linearGradient>
+      <linearGradient id="spendGrad" x1="0" y1="0" x2="0" y2="1" gradientUnits="objectBoundingBox">
+        <stop offset="0%" stop-color="#f093fb"/><stop offset="100%" stop-color="#f5576c"/>
+      </linearGradient>
+      <clipPath id="saveClip"><rect x="12" y="50" width="40" height="0" id="saveFillRect"/></clipPath>
+      <clipPath id="investClip"><rect x="12" y="50" width="40" height="0" id="investFillRect"/></clipPath>
+      <clipPath id="spendClip"><rect x="12" y="50" width="40" height="0" id="spendFillRect"/></clipPath>
+    </defs>
+  </svg>
+
   <div class="jars-row">
     <div class="jar-card jar-save">
       <div class="jar-label">💚 Save</div>
       <div class="jar-amount" id="save-total">S$0.00</div>
       <div class="jar-visual">
-        <svg class="jar-svg" viewBox="0 0 64 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg class="jar-svg" viewBox="0 0 64 54" fill="none">
           <path d="M18 8 Q18 4 22 4 L42 4 Q46 4 46 8 L48 14 Q52 16 52 20 L52 46 Q52 50 48 50 L16 50 Q12 50 12 46 L12 20 Q12 16 16 14 Z" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
-          <clipPath id="saveClip">
-            <rect x="12" y="50" width="40" height="0" id="saveFillRect"/>
-          </clipPath>
           <path d="M18 8 Q18 4 22 4 L42 4 Q46 4 46 8 L48 14 Q52 16 52 20 L52 46 Q52 50 48 50 L16 50 Q12 50 12 46 L12 20 Q12 16 16 14 Z" fill="url(#saveGrad)" clip-path="url(#saveClip)"/>
-          <defs>
-            <linearGradient id="saveGrad" x1="0" y1="0" x2="0" y2="1" gradientUnits="objectBoundingBox">
-              <stop offset="0%" stop-color="#1de9b6"/>
-              <stop offset="100%" stop-color="#00e676"/>
-            </linearGradient>
-          </defs>
           <ellipse cx="23" cy="22" rx="3" ry="5" fill="rgba(255,255,255,0.15)" transform="rotate(-20 23 22)"/>
         </svg>
       </div>
     </div>
-    
     <div class="jar-card jar-invest">
       <div class="jar-label">💙 Invest</div>
       <div class="jar-amount" id="invest-total">S$0.00</div>
       <div class="jar-visual">
-        <svg class="jar-svg" viewBox="0 0 64 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg class="jar-svg" viewBox="0 0 64 54" fill="none">
           <path d="M18 8 Q18 4 22 4 L42 4 Q46 4 46 8 L48 14 Q52 16 52 20 L52 46 Q52 50 48 50 L16 50 Q12 50 12 46 L12 20 Q12 16 16 14 Z" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
-          <clipPath id="investClip">
-            <rect x="12" y="50" width="40" height="0" id="investFillRect"/>
-          </clipPath>
           <path d="M18 8 Q18 4 22 4 L42 4 Q46 4 46 8 L48 14 Q52 16 52 20 L52 46 Q52 50 48 50 L16 50 Q12 50 12 46 L12 20 Q12 16 16 14 Z" fill="url(#investGrad)" clip-path="url(#investClip)"/>
-          <defs>
-            <linearGradient id="investGrad" x1="0" y1="0" x2="0" y2="1" gradientUnits="objectBoundingBox">
-              <stop offset="0%" stop-color="#4fc3f7"/>
-              <stop offset="100%" stop-color="#0288d1"/>
-            </linearGradient>
-          </defs>
           <ellipse cx="23" cy="22" rx="3" ry="5" fill="rgba(255,255,255,0.15)" transform="rotate(-20 23 22)"/>
         </svg>
       </div>
     </div>
-    
     <div class="jar-card jar-spend">
       <div class="jar-label">💜 Spend</div>
       <div class="jar-amount" id="spend-total">S$0.00</div>
       <div class="jar-visual">
-        <svg class="jar-svg" viewBox="0 0 64 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg class="jar-svg" viewBox="0 0 64 54" fill="none">
           <path d="M18 8 Q18 4 22 4 L42 4 Q46 4 46 8 L48 14 Q52 16 52 20 L52 46 Q52 50 48 50 L16 50 Q12 50 12 46 L12 20 Q12 16 16 14 Z" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
-          <clipPath id="spendClip">
-            <rect x="12" y="50" width="40" height="0" id="spendFillRect"/>
-          </clipPath>
           <path d="M18 8 Q18 4 22 4 L42 4 Q46 4 46 8 L48 14 Q52 16 52 20 L52 46 Q52 50 48 50 L16 50 Q12 50 12 46 L12 20 Q12 16 16 14 Z" fill="url(#spendGrad)" clip-path="url(#spendClip)"/>
-          <defs>
-            <linearGradient id="spendGrad" x1="0" y1="0" x2="0" y2="1" gradientUnits="objectBoundingBox">
-              <stop offset="0%" stop-color="#f093fb"/>
-              <stop offset="100%" stop-color="#f5576c"/>
-            </linearGradient>
-          </defs>
           <ellipse cx="23" cy="22" rx="3" ry="5" fill="rgba(255,255,255,0.15)" transform="rotate(-20 23 22)"/>
         </svg>
       </div>
@@ -737,13 +248,8 @@
   </div>
 
   <div class="total-banner">
-    <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-      <span class="total-label">⭐ My Money</span>
-      <span class="total-amount" id="my-money-total">S$0.00</span>
-    </div>
-    <div id="my-money-breakdown" style="font-size: 10px; color: var(--text2); text-align: right; font-weight: 700; white-space: nowrap; width: 100%; overflow: hidden; text-overflow: ellipsis;">
-      Save (S$0.00) + Invest (S$0.00) - Spend (S$0.00)
-    </div>
+    <span class="total-label">⭐ My Money</span>
+    <span class="total-amount" id="my-money-total">S$0.00</span>
   </div>
 
   <div class="coins-section">
@@ -753,7 +259,6 @@
 
   <div class="carousel-section" id="carousel-section">
     <div class="carousel-viewport" id="carousel-viewport" onscroll="updateDots()">
-      
       <div class="carousel-slide">
         <div class="trend-card">
           <div class="trend-header">
@@ -763,27 +268,19 @@
           <svg id="trend-svg" preserveAspectRatio="none"></svg>
         </div>
       </div>
-
       <div class="carousel-slide">
         <div class="trend-card">
-          <div class="trend-header">
-            <span class="trend-label">⭐ Helping History</span>
-          </div>
+          <div class="trend-header"><span class="trend-label">⭐ Helping History</span></div>
           <div class="help-list" id="help-list"></div>
         </div>
       </div>
-      
       <div class="carousel-slide">
         <div class="trend-card">
-          <div class="trend-header">
-            <span class="trend-label">💸 Investment</span>
-          </div>
+          <div class="trend-header"><span class="trend-label">💸 Investment</span></div>
           <div class="help-list" id="div-list"></div>
         </div>
       </div>
-
     </div>
-    
     <div class="carousel-dots">
       <div class="carousel-dot active" id="dot-1"></div>
       <div class="carousel-dot" id="dot-2"></div>
@@ -793,29 +290,28 @@
 
   <div class="helped-section" id="helped-section">
     <div class="helped-card">
-      <div style="font-size: 13px; font-weight: 800; color: var(--gold); letter-spacing: 0.5px; width: 100%;">I helped today, by:</div>
+      <div style="font-size:13px;font-weight:800;color:var(--gold);letter-spacing:.5px;width:100%">I helped today, by:</div>
       <input type="text" id="helped-text" class="helped-input" placeholder="e.g. washing the dishes" spellcheck="false">
-      <div style="display: flex; align-items: center; justify-content: space-between; width: 100%; margin-top: 4px;">
-         <div style="display: flex; align-items: center; gap: 12px;">
-           <div class="coin-icon" style="background: linear-gradient(135deg, #d4af37, #f0c040, #c09030); color: #7a5200; width: 38px; height: 38px; font-size: 11px;">$1</div>
-           <div class="coin-controls">
-             <button class="btn-coin btn-minus" onclick="changeHelpedAmount(-1)">−</button>
-             <span id="helped-amount" style="font-family: 'Fredoka One'; font-size: 20px; width: 30px; text-align: center; color: white;">0</span>
-             <button class="btn-coin btn-plus" onclick="changeHelpedAmount(1)">+</button>
-           </div>
-         </div>
-         <button class="modal-btn" onclick="submitHelp()" style="background: linear-gradient(135deg, var(--gold), var(--gold2)); color: #5a3000; padding: 10px 24px; font-size: 13px; box-shadow: 0 4px 10px rgba(255,215,0,0.3);">Submit</button>
+      <div style="display:flex;align-items:center;justify-content:space-between;width:100%;margin-top:4px">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div class="coin-icon" style="background:linear-gradient(135deg,#d4af37,#f0c040,#c09030);color:#7a5200;width:38px;height:38px;font-size:11px">$1</div>
+          <div class="coin-controls">
+            <button class="btn-coin btn-minus" onclick="changeHelpedAmount(-1)">−</button>
+            <span id="helped-amount" style="font-family:'Fredoka One';font-size:20px;width:30px;text-align:center;color:#fff">0</span>
+            <button class="btn-coin btn-plus" onclick="changeHelpedAmount(1)">+</button>
+          </div>
+        </div>
+        <button class="modal-btn" onclick="submitHelp()" style="background:linear-gradient(135deg,var(--gold),var(--gold2));color:#5a3000;padding:10px 24px;font-size:13px;box-shadow:0 4px 10px rgba(255,215,0,0.3)">Submit</button>
       </div>
     </div>
   </div>
 
-  <div class="invest-section" id="invest-section" style="display: none; flex: 1; padding: 6px 12px 0; flex-direction: column; min-height: 0;">
-    <div class="total-banner" style="margin: 0 0 10px 0; background: linear-gradient(135deg, rgba(79,195,247,0.15), rgba(79,195,247,0.05)); border-color: rgba(79,195,247,0.3);">
-      <span class="total-label" style="color: var(--blue);">📈 Portfolio Value</span>
-      <span class="total-amount" id="portfolio-total" style="color: var(--blue);">S$0.00</span>
+  <div id="invest-section" style="display:none;flex:1;padding:6px 12px 0;flex-direction:column;min-height:0">
+    <div class="total-banner" style="margin:0 0 10px;background:linear-gradient(135deg,rgba(79,195,247,0.15),rgba(79,195,247,0.05));border-color:rgba(79,195,247,0.3)">
+      <span class="total-label" style="color:var(--blue)">📈 Investment</span>
+      <span class="total-amount" id="portfolio-total" style="color:var(--blue)">S$0.00</span>
     </div>
-    <div style="flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; padding-bottom: 8px;" id="market-grid">
-      </div>
+    <div style="flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding-bottom:8px" id="market-grid"></div>
   </div>
 
   <div class="bottom-bar">
@@ -830,681 +326,445 @@
 </div>
 
 <script>
-// ─── DATA & MARKET CONFIG ───────────────────────────────────────────────
-const COINS = [
-  { id: 'c10',  label: '10¢',  value: 0.10, cls: 'coin-10c' },
-  { id: 'c20',  label: '20¢',  value: 0.20, cls: 'coin-20c' },
-  { id: 'c50',  label: '50¢',  value: 0.50, cls: 'coin-50c' },
-  { id: 'c1',   label: '$1',   value: 1.00, cls: 'coin-1'   },
-  { id: 'c2',   label: '$2',   value: 2.00, cls: 'coin-2'   },
-  { id: 'n10',  label: '$10',  value: 10.00, cls: 'note-10' },
+const COINS=[
+  {id:'c10',label:'10¢',value:0.10,cls:'coin-10c'},
+  {id:'c20',label:'20¢',value:0.20,cls:'coin-20c'},
+  {id:'c50',label:'50¢',value:0.50,cls:'coin-50c'},
+  {id:'c1', label:'$1', value:1.00,cls:'coin-1'  },
+  {id:'c2', label:'$2', value:2.00,cls:'coin-2'  },
+  {id:'n10',label:'$10',value:10.00,cls:'note-10'},
 ];
 
-const STOCKS = {
-  LGO:  { id: 'LGO',  name: 'Lego',      base: 5.00,  div: 0.10, vol: 0.04, icon: '🧱' }, 
-  NASA: { id: 'NASA', name: 'NASA',      base: 10.00, div: 0.00, vol: 0.15, icon: '🚀' }, 
-  MCFT: { id: 'MCFT', name: 'Minecraft', base: 8.00,  div: 0.05, vol: 0.08, icon: '⛏️' }  
+const STOCKS={
+  LGO: {id:'LGO', name:'Lego',      base:5.00, div:0.10,vol:0.04,icon:'🧱'},
+  NASA:{id:'NASA',name:'NASA',       base:10.00,div:0.00,vol:0.15,icon:'🚀'},
+  MCFT:{id:'MCFT',name:'Minecraft',  base:8.00, div:0.05,vol:0.08,icon:'⛏️'},
 };
 
-function getWeekString() {
-  const d = new Date(); return `${d.getFullYear()}-${Math.ceil(d.getDate() / 7)}-${d.getMonth()}`;
-}
+const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const fmt=n=>'S$'+n.toFixed(2);
 
-function loadState() {
-  const raw = localStorage.getItem('myjars_v2');
-  if (raw) {
-      let parsed = JSON.parse(raw);
-      if (!parsed.portfolio) parsed.portfolio = { LGO: 0, NASA: 0, MCFT: 0 };
-      if (!parsed.prices) parsed.prices = { LGO: 5.00, NASA: 10.00, MCFT: 8.00 };
-      if (!parsed.lastMarketWeek) parsed.lastMarketWeek = getWeekString();
-      if (!parsed.helpHistory) parsed.helpHistory = [];
-      if (!parsed.divHistory) parsed.divHistory = []; 
-      return parsed;
+function getWeekString(){const d=new Date();return`${d.getFullYear()}-${Math.ceil(d.getDate()/7)}-${d.getMonth()}`}
+
+function emptyJar(){return{c10:0,c20:0,c50:0,c1:0,c2:0,n10:0}}
+
+function loadState(){
+  const raw=localStorage.getItem('myjars_v2');
+  if(raw){
+    const p=JSON.parse(raw);
+    p.portfolio??={LGO:0,NASA:0,MCFT:0};
+    p.prices??={LGO:5.00,NASA:10.00,MCFT:8.00};
+    p.lastMarketWeek??=getWeekString();
+    p.helpHistory??=[];
+    p.divHistory??=[];
+    return p;
   }
-  return {
-    activeJar: 'save',
-    save:  { c10:0, c20:0, c50:0, c1:0, c2:0, n10:0 },
-    spend: { c10:0, c20:0, c50:0, c1:0, c2:0, n10:0 },
-    history: [],
-    helpHistory: [],
-    divHistory: [],
-    portfolio: { LGO: 0, NASA: 0, MCFT: 0 },
-    prices: { LGO: 5.00, NASA: 10.00, MCFT: 8.00 },
-    lastMarketWeek: getWeekString()
-  };
+  return{activeJar:'save',save:emptyJar(),spend:emptyJar(),history:[],helpHistory:[],divHistory:[],
+    portfolio:{LGO:0,NASA:0,MCFT:0},prices:{LGO:5.00,NASA:10.00,MCFT:8.00},lastMarketWeek:getWeekString()};
 }
 
-function saveState() {
-  localStorage.setItem('myjars_v2', JSON.stringify(state));
-}
+function saveState(){localStorage.setItem('myjars_v2',JSON.stringify(state))}
 
-function seedIfEmpty() {
-  const existing = localStorage.getItem('myjars_v2');
-  if (existing) return; 
+let state=loadState();
+let currentTab=state.activeJar;
 
-  const jan = { c10:15, c20:12, c50:8, c1:2, c2:2, n10:1 };
-  const feb = { c10:30, c20:24, c50:7, c1:4, c2:4, n10:3 };
-
-  function jarTotal(coins) {
-    return coins.c10*0.10 + coins.c20*0.20 + coins.c50*0.50 + coins.c1*1 + coins.c2*2 + coins.n10*10;
-  }
-
-  const janSave  = parseFloat(jarTotal(jan).toFixed(2));
-  const febSave  = parseFloat(jarTotal(feb).toFixed(2));
-
-  const seeded = {
-    activeJar: 'save',
-    save:  feb,
-    spend: { c10:0, c20:0, c50:0, c1:0, c2:0, n10:0 },
-    history: [
-      { date: '1 Jan', save: janSave,  spend: 0 },
-      { date: '8 Jan', save: janSave,  spend: 0 },
-      { date: '15 Jan', save: janSave, spend: 0 },
-      { date: '22 Jan', save: janSave, spend: 0 },
-      { date: '1 Feb', save: febSave,  spend: 0 },
-      { date: '8 Feb', save: febSave,  spend: 0 },
-      { date: '15 Feb', save: febSave, spend: 0 },
-      { date: '22 Feb', save: febSave, spend: 0 },
-    ],
-    helpHistory: [],
-    divHistory: [],
-    portfolio: { LGO: 0, NASA: 0, MCFT: 0 },
-    prices: { LGO: 5.00, NASA: 10.00, MCFT: 8.00 },
-    lastMarketWeek: getWeekString()
-  };
-  localStorage.setItem('myjars_v2', JSON.stringify(seeded));
-}
-seedIfEmpty();
-
-let state = loadState();
-let currentTab = state.activeJar;
-
-// ─── TAB TOGGLE ──────────────────────────────────────────────────────────
-function setTab(tab) {
-  currentTab = tab;
-  
-  document.getElementById('btn-save').className = 'jar-btn' + (tab==='save' ? ' active-save' : '');
-  document.getElementById('btn-spend').className = 'jar-btn' + (tab==='spend' ? ' active-spend' : '');
-  document.getElementById('btn-helped').className = 'jar-btn' + (tab==='helped' ? ' active-helped' : '');
-  document.getElementById('btn-invest').className = 'jar-btn' + (tab==='invest' ? ' active-invest' : '');
-  
-  document.getElementById('carousel-section').style.display = 'none';
-  document.getElementById('helped-section').style.display = 'none';
-  document.getElementById('invest-section').style.display = 'none';
-
-  if (tab === 'save' || tab === 'spend') {
-    state.activeJar = tab;
-    document.getElementById('carousel-section').style.display = 'flex';
-    const vp = document.getElementById('carousel-viewport');
-    if (vp) vp.scrollTo({ left: 0, behavior: 'smooth' });
-    saveState();
+function setTab(tab){
+  currentTab=tab;
+  ['save','spend','helped','invest'].forEach(t=>{
+    const btn=document.getElementById('btn-'+t);
+    btn.className='jar-btn'+(tab===t?' active-'+t:'');
+  });
+  document.getElementById('carousel-section').style.display='none';
+  document.getElementById('helped-section').style.display='none';
+  document.getElementById('invest-section').style.display='none';
+  if(tab==='save'||tab==='spend'){
+    state.activeJar=tab;
+    document.getElementById('carousel-section').style.display='flex';
+    document.getElementById('carousel-viewport').scrollTo({left:0,behavior:'smooth'});
+    saveState(); render();
+  }else if(tab==='helped'){
+    state.activeJar='save';
+    document.getElementById('helped-section').style.display='flex';
     render();
-  } else if (tab === 'helped') {
-    state.activeJar = 'save';
-    document.getElementById('helped-section').style.display = 'flex';
-    render();
-  } else if (tab === 'invest') {
-    state.activeJar = 'save';
-    document.getElementById('invest-section').style.display = 'flex';
+  }else{
+    state.activeJar='save';
+    document.getElementById('invest-section').style.display='flex';
     renderMarket();
   }
 }
 
-// ─── COIN TILES ──────────────────────────────────────────────────────────
-function buildGrid() {
-  const grid = document.getElementById('coins-grid');
-  grid.innerHTML = '';
-  COINS.forEach(coin => {
-    const tile = document.createElement('div');
-    tile.className = `coin-tile ${coin.cls}`;
-    tile.id = `tile-${coin.id}`;
-    tile.innerHTML = `
-      <div class="coin-icon">${coin.label}</div>
-      <div class="coin-count" id="cnt-${coin.id}">0</div>
-      <div class="coin-total-val" id="val-${coin.id}">S$0.00</div>
+function buildGrid(){
+  const grid=document.getElementById('coins-grid');
+  grid.innerHTML=COINS.map(c=>`
+    <div class="coin-tile ${c.cls}" id="tile-${c.id}">
+      <div class="coin-icon">${c.label}</div>
+      <div class="coin-count" id="cnt-${c.id}">0</div>
+      <div class="coin-total-val" id="val-${c.id}">S$0.00</div>
       <div class="coin-controls">
-        <button class="btn-coin btn-minus" onclick="askApproval('${coin.id}', -1, event)">−</button>
-        <button class="btn-coin btn-plus"  onclick="askApproval('${coin.id}', +1, event)">+</button>
+        <button class="btn-coin btn-minus" onclick="askApproval('${c.id}',-1,event)">−</button>
+        <button class="btn-coin btn-plus"  onclick="askApproval('${c.id}',+1,event)">+</button>
       </div>
-    `;
-    grid.appendChild(tile);
-  });
+    </div>`).join('');
 }
 
-function executeCoinChange(id, delta) {
-  const jar = state.activeJar;
-  const coin = COINS.find(c => c.id === id);
-  const current = state[jar][id] || 0;
-  const next = Math.max(0, current + delta);
-  if (next === current) return;
-  state[jar][id] = next;
-
-  if (delta > 0) {
-    const tile = document.getElementById(`tile-${id}`);
+function executeCoinChange(id,delta){
+  const jar=state.activeJar;
+  const coin=COINS.find(c=>c.id===id);
+  const next=Math.max(0,(state[jar][id]||0)+delta);
+  if(next===(state[jar][id]||0))return;
+  state[jar][id]=next;
+  if(delta>0){
+    const tile=document.getElementById('tile-'+id);
     tile.classList.remove('just-added');
     void tile.offsetWidth;
     tile.classList.add('just-added');
-    setTimeout(() => tile.classList.remove('just-added'), 500);
-    const total = Math.max(0, calcJarTotal('save') - calcJarTotal('spend'));
-    if (Math.floor(total) > Math.floor(total - coin.value)) confettiBurst();
+    setTimeout(()=>tile.classList.remove('just-added'),500);
+    const total=Math.max(0,calcJarTotal('save')-calcJarTotal('spend'));
+    if(Math.floor(total)>Math.floor(total-coin.value))confettiBurst();
   }
-
-  saveState();
-  recordHistory();
-  render();
+  saveState();recordHistory();render();
 }
 
-// ─── I HELPED LOGIC ──────────────────────────────────────────────────────
-let helpedAmount = 0;
-
-function changeHelpedAmount(delta) {
-  helpedAmount = Math.max(0, helpedAmount + delta);
-  document.getElementById('helped-amount').textContent = helpedAmount;
+let helpedAmount=0;
+function changeHelpedAmount(delta){
+  helpedAmount=Math.max(0,helpedAmount+delta);
+  document.getElementById('helped-amount').textContent=helpedAmount;
 }
 
-function submitHelp() {
-  if (helpedAmount === 0) return; 
-  let text = document.getElementById('helped-text').value.trim();
-  if (!text) text = "Helped out around the house";
-  approveAction = { type: 'help', amount: helpedAmount, text: text };
-  approveEntry = '';
-  updateApproveDots();
-  document.getElementById('approve-msg').textContent = '';
+function submitHelp(){
+  if(!helpedAmount)return;
+  const text=document.getElementById('helped-text').value.trim()||'Helped out around the house';
+  approveAction={type:'help',amount:helpedAmount,text};
+  approveEntry='';updateApproveDots();
+  document.getElementById('approve-msg').textContent='';
   document.getElementById('approve-modal').classList.add('open');
 }
 
-function executeHelp(amount, text) {
-  const currentC1 = state.save['c1'] || 0;
-  state.save['c1'] = currentC1 + amount;
-  
-  const d = new Date();
-  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  const dd = String(d.getDate()).padStart(2, '0');
-  const mmm = months[d.getMonth()];
-  const yy = String(d.getFullYear()).slice(-2);
-  const dateStr = `${dd} ${mmm} ${yy}`;
-  
-  if(!state.helpHistory) state.helpHistory = [];
-  state.helpHistory.unshift({ date: dateStr, text: text, amount: amount });
-  if (state.helpHistory.length > 50) state.helpHistory.pop();
-  
-  saveState();
-  recordHistory();
-  confettiBurst();
-  
-  helpedAmount = 0;
-  document.getElementById('helped-amount').textContent = '0';
-  document.getElementById('helped-text').value = '';
+function executeHelp(amount,text){
+  state.save['c1']=(state.save['c1']||0)+amount;
+  const d=new Date();
+  const dateStr=`${String(d.getDate()).padStart(2,'0')} ${MONTHS[d.getMonth()]} ${String(d.getFullYear()).slice(-2)}`;
+  state.helpHistory.unshift({date:dateStr,text,amount});
+  if(state.helpHistory.length>50)state.helpHistory.pop();
+  saveState();recordHistory();confettiBurst();
+  helpedAmount=0;
+  document.getElementById('helped-amount').textContent='0';
+  document.getElementById('helped-text').value='';
   setTab('save');
 }
 
-// ─── MARKET LOGIC ─────────────────────────────────────────────────────────
-function runMarketUpdate() {
-  const currentWeek = getWeekString();
-  
-  if (state.lastMarketWeek !== currentWeek) {
-    Object.keys(STOCKS).forEach(id => {
-      const stock = STOCKS[id];
-      const shares = state.portfolio[id] || 0;
-      
-      if (shares > 0 && stock.div > 0) {
-        const divAmount = shares * stock.div;
-        let exactDiv = Math.round(divAmount * 10) / 10;
-        
-        if (exactDiv > 0) {
-            state.save['c10'] = (state.save['c10'] || 0) + Math.round(exactDiv / 0.10);
-            state.divHistory.unshift({ 
-                date: new Date().toLocaleDateString('en-SG', {day:'numeric', month:'short'}), 
-                text: `📈 ${stock.name} Paid Dividend`, 
-                amount: exactDiv 
-            });
-        }
+function runMarketUpdate(){
+  const cw=getWeekString();
+  if(state.lastMarketWeek===cw)return;
+  Object.keys(STOCKS).forEach(id=>{
+    const stock=STOCKS[id];
+    const shares=state.portfolio[id]||0;
+    if(shares>0&&stock.div>0){
+      const exactDiv=Math.round(shares*stock.div*10)/10;
+      if(exactDiv>0){
+        state.save['c10']=(state.save['c10']||0)+Math.round(exactDiv/0.10);
+        state.divHistory.unshift({
+          date:new Date().toLocaleDateString('en-SG',{day:'numeric',month:'short'}),
+          text:`📈 ${stock.name} Paid Dividend`,amount:exactDiv
+        });
       }
-      
-      const change = (Math.random() * (stock.vol * 1.5)) - (stock.vol * 0.5); 
-      let newPrice = state.prices[id] * (1 + change);
-      state.prices[id] = Math.max(1.00, Math.round(newPrice * 10) / 10); 
-    });
-
-    if (state.divHistory.length > 50) state.divHistory = state.divHistory.slice(0, 50);
-    
-    state.lastMarketWeek = currentWeek;
-    saveState();
-  }
+    }
+    const change=(Math.random()*(stock.vol*1.5))-(stock.vol*0.5);
+    state.prices[id]=Math.max(1.00,Math.round(state.prices[id]*(1+change)*10)/10);
+  });
+  if(state.divHistory.length>50)state.divHistory=state.divHistory.slice(0,50);
+  state.lastMarketWeek=cw;
+  saveState();
 }
 
-function calcInvestTotal() {
-  return Object.keys(STOCKS).reduce((sum, id) => sum + (state.prices[id] * (state.portfolio[id] || 0)), 0);
+function calcInvestTotal(){
+  return Object.keys(STOCKS).reduce((s,id)=>s+state.prices[id]*(state.portfolio[id]||0),0);
 }
 
-function renderMarket() {
-  const grid = document.getElementById('market-grid');
-  let totalValue = calcInvestTotal();
-  grid.innerHTML = '';
-  
-  Object.keys(STOCKS).forEach(id => {
-    const stock = STOCKS[id];
-    const price = state.prices[id];
-    const shares = state.portfolio[id] || 0;
-    
-    const diff = price - stock.base;
-    const diffStr = diff >= 0 ? `<span class="stock-change up">▲ +${fmt(diff).replace('S$','')}</span>` : `<span class="stock-change down">▼ ${fmt(Math.abs(diff)).replace('S$','')}</span>`;
-
-    grid.innerHTML += `
-      <div class="stock-card">
-        <div class="stock-info">
-          <div class="stock-icon">${stock.icon}</div>
-          <div>
-            <div class="stock-name">${stock.name}</div>
-            <div class="stock-price">${fmt(price)} ${diffStr}</div>
-          </div>
-        </div>
-        <div class="stock-actions">
-          ${shares > 0 ? `<div class="stock-shares">${shares} Shares</div>` : ''}
-          <div style="display:flex; gap:4px; margin-top:4px;">
-            ${shares > 0 ? `<button class="btn-trade" onclick="askTradeApproval('${id}', -1, event)" style="color:#ff6b6b">Sell</button>` : ''}
-            <button class="btn-trade" onclick="askTradeApproval('${id}', 1, event)" style="color:var(--green)">Buy</button>
-          </div>
+function renderMarket(){
+  const grid=document.getElementById('market-grid');
+  grid.innerHTML=Object.keys(STOCKS).map(id=>{
+    const stock=STOCKS[id],price=state.prices[id],shares=state.portfolio[id]||0;
+    const diff=price-stock.base;
+    const diffStr=diff>=0
+      ?`<span class="stock-change up">▲ +${fmt(diff).replace('S$','')}</span>`
+      :`<span class="stock-change down">▼ ${fmt(Math.abs(diff)).replace('S$','')}</span>`;
+    return`<div class="stock-card">
+      <div class="stock-info">
+        <div class="stock-icon">${stock.icon}</div>
+        <div><div class="stock-name">${stock.name}</div><div class="stock-price">${fmt(price)} ${diffStr}</div></div>
+      </div>
+      <div class="stock-actions">
+        ${shares>0?`<div class="stock-shares">${shares} Shares</div>`:''}
+        <div style="display:flex;gap:4px;margin-top:4px">
+          ${shares>0?`<button class="btn-trade" onclick="askTradeApproval('${id}',-1,event)" style="color:#ff6b6b">Sell</button>`:''}
+          <button class="btn-trade" onclick="askTradeApproval('${id}',1,event)" style="color:var(--green)">Buy</button>
         </div>
       </div>
-    `;
-  });
-  
-  document.getElementById('portfolio-total').textContent = fmt(totalValue);
+    </div>`;
+  }).join('');
+  document.getElementById('portfolio-total').textContent=fmt(calcInvestTotal());
 }
 
-function askTradeApproval(id, direction, e) {
-  e.stopPropagation();
-  
-  if (direction === 1) { 
-    const price = state.prices[id];
-    let rem = Math.round(price * 100);
-    let tempSave = { ...state.save };
-    const sorted = [...COINS].sort((a,b) => b.value - a.value);
-    
-    for(let c of sorted) {
-      let cv = Math.round(c.value * 100);
-      let needed = Math.floor(rem / cv);
-      let available = tempSave[c.id] || 0;
-      let toTake = Math.min(needed, available);
-      if(toTake > 0) { tempSave[c.id] -= toTake; rem -= toTake * cv; }
-    }
-    
-    if (rem > 0) {
-      alert("Uh oh! You don't have exact change to buy this. Ask Mama/Papa to break your bigger coins into smaller ones first!");
-      return; 
-    }
+function canAfford(id){
+  let rem=Math.round(state.prices[id]*100);
+  const tmp={...state.save};
+  for(const c of [...COINS].sort((a,b)=>b.value-a.value)){
+    const cv=Math.round(c.value*100),avail=tmp[c.id]||0;
+    const take=Math.min(Math.floor(rem/cv),avail);
+    if(take>0){tmp[c.id]-=take;rem-=take*cv;}
   }
+  return rem===0?tmp:null;
+}
 
-  approveAction = { type: 'trade', id: id, direction: direction };
-  approveEntry = '';
-  updateApproveDots();
-  document.getElementById('approve-msg').textContent = '';
+function askTradeApproval(id,direction,e){
+  e.stopPropagation();
+  if(direction===1&&!canAfford(id)){
+    alert("Uh oh! You don't have exact change to buy this. Ask Mama/Papa to break your bigger coins into smaller ones first!");
+    return;
+  }
+  approveAction={type:'trade',id,direction};
+  approveEntry='';updateApproveDots();
+  document.getElementById('approve-msg').textContent='';
   document.getElementById('approve-modal').classList.add('open');
 }
 
-function tradeStock(id, direction) {
-  const price = state.prices[id];
-  
-  if (direction === 1) { 
-    let rem = Math.round(price * 100);
-    let tempSave = { ...state.save };
-    const sorted = [...COINS].sort((a,b) => b.value - a.value);
-    
-    for(let c of sorted) {
-      let cv = Math.round(c.value * 100);
-      let needed = Math.floor(rem / cv);
-      let available = tempSave[c.id] || 0;
-      let toTake = Math.min(needed, available);
-      if(toTake > 0) { tempSave[c.id] -= toTake; rem -= toTake * cv; }
-    }
-    
-    state.save = tempSave;
-    state.portfolio[id] = (state.portfolio[id] || 0) + 1;
+function tradeStock(id,direction){
+  const price=state.prices[id];
+  if(direction===1){
+    const tmp=canAfford(id);
+    if(!tmp)return;
+    state.save=tmp;
+    state.portfolio[id]=(state.portfolio[id]||0)+1;
     confettiBurst();
-    
-  } else { 
-    state.portfolio[id] -= 1;
-    let rem = Math.round(price * 100);
-    const sorted = [...COINS].sort((a,b) => b.value - a.value);
-    for(let c of sorted) {
-      let cv = Math.round(c.value * 100);
-      let count = Math.floor(rem / cv);
-      if(count > 0) { state.save[c.id] = (state.save[c.id] || 0) + count; rem -= count * cv; }
+  }else{
+    state.portfolio[id]-=1;
+    let rem=Math.round(price*100);
+    for(const c of [...COINS].sort((a,b)=>b.value-a.value)){
+      const cv=Math.round(c.value*100),count=Math.floor(rem/cv);
+      if(count>0){state.save[c.id]=(state.save[c.id]||0)+count;rem-=count*cv;}
     }
   }
-  
-  saveState();
-  renderMarket();
-  render(); 
+  saveState();renderMarket();render();
 }
 
-// ─── APPROVAL PIN LOGIC ──────────────────────────────────────────────────
-const APPROVE_PIN = '2019';
-let approveAction = null; 
-let approveEntry = '';
+const APPROVE_PIN='2019';
+let approveAction=null,approveEntry='';
 
-function askApproval(id, delta, e) {
+function askApproval(id,delta,e){
   e.stopPropagation();
-  const current = state[state.activeJar][id] || 0;
-  if (delta < 0 && current === 0) return;
-
-  approveAction = { type: 'coin', id, delta };
-  approveEntry = '';
-  updateApproveDots();
-  document.getElementById('approve-msg').textContent = '';
+  if(delta<0&&(state[state.activeJar][id]||0)===0)return;
+  approveAction={type:'coin',id,delta};
+  approveEntry='';updateApproveDots();
+  document.getElementById('approve-msg').textContent='';
   document.getElementById('approve-modal').classList.add('open');
 }
 
-function closeApprove() {
-  document.getElementById('approve-modal').classList.remove('open');
-  approveAction = null;
+function closeApprove(){document.getElementById('approve-modal').classList.remove('open');approveAction=null;}
+
+function apprKey(d){if(approveEntry.length<4){approveEntry+=d;updateApproveDots();if(approveEntry.length===4)setTimeout(apprSubmit,150);}}
+function apprClear(){approveEntry=approveEntry.slice(0,-1);updateApproveDots();}
+
+function updateApproveDots(){
+  for(let i=0;i<4;i++)document.getElementById('apd'+i)?.classList.toggle('filled',i<approveEntry.length);
 }
 
-function apprKey(digit) {
-  if (approveEntry.length >= 4) return;
-  approveEntry += digit;
-  updateApproveDots();
-  if (approveEntry.length === 4) setTimeout(apprSubmit, 150);
-}
-
-function apprClear() {
-  approveEntry = approveEntry.slice(0, -1);
-  updateApproveDots();
-}
-
-function updateApproveDots() {
-  for (let i = 0; i < 4; i++) {
-    const dot = document.getElementById('apd' + i);
-    if (dot) dot.classList.toggle('filled', i < approveEntry.length);
-  }
-}
-
-function apprSubmit() {
-  if (approveEntry === APPROVE_PIN) {
-    if (approveAction && approveAction.type === 'coin') {
-      executeCoinChange(approveAction.id, approveAction.delta);
-    } else if (approveAction && approveAction.type === 'help') {
-      executeHelp(approveAction.amount, approveAction.text);
-    } else if (approveAction && approveAction.type === 'trade') {
-      tradeStock(approveAction.id, approveAction.direction);
-    }
+function apprSubmit(){
+  if(approveEntry===APPROVE_PIN){
+    if(approveAction?.type==='coin')executeCoinChange(approveAction.id,approveAction.delta);
+    else if(approveAction?.type==='help')executeHelp(approveAction.amount,approveAction.text);
+    else if(approveAction?.type==='trade')tradeStock(approveAction.id,approveAction.direction);
     closeApprove();
-  } else {
-    approveEntry = '';
-    updateApproveDots();
-    const dots = document.getElementById('approve-pin-dots').querySelectorAll('.pin-dot');
-    dots.forEach(d => {
-      d.style.animation = 'none';
-      void d.offsetWidth;
-      d.style.animation = 'pinShake 0.35s ease';
+  }else{
+    approveEntry='';updateApproveDots();
+    document.getElementById('approve-pin-dots').querySelectorAll('.pin-dot').forEach(d=>{
+      d.style.animation='none';void d.offsetWidth;d.style.animation='pinShake .35s ease';
     });
-    const msgEl = document.getElementById('approve-msg');
-    msgEl.textContent = 'Wrong passcode';
-    msgEl.className = 'backup-msg err';
-    setTimeout(() => { msgEl.textContent = ''; }, 1500);
+    const el=document.getElementById('approve-msg');
+    el.textContent='Wrong passcode';el.className='backup-msg err';
+    setTimeout(()=>{el.textContent='';},1500);
   }
 }
 
-// ─── CALC & FORMAT ────────────────────────────────────────────────────────
-function calcJarTotal(jar) {
-  return COINS.reduce((sum, c) => sum + (state[jar][c.id] || 0) * c.value, 0);
-}
-function fmt(n) { return 'S$' + n.toFixed(2); }
+function calcJarTotal(jar){return COINS.reduce((s,c)=>s+(state[jar][c.id]||0)*c.value,0);}
 
-// ─── RENDER ──────────────────────────────────────────────────────────────
-function render() {
-  const saveTotal  = calcJarTotal('save');
-  const spendTotal = calcJarTotal('spend');
-  const investTotal = calcInvestTotal();
-  
-  const myMoney = Math.max(0, saveTotal + investTotal - spendTotal);
-
-  document.getElementById('save-total').textContent  = fmt(saveTotal);
-  document.getElementById('invest-total').textContent = fmt(investTotal);
-  document.getElementById('spend-total').textContent = fmt(spendTotal);
-  
-  document.getElementById('my-money-total').textContent = fmt(myMoney);
-  document.getElementById('my-money-breakdown').textContent = `Save (${fmt(saveTotal)}) + Invest (${fmt(investTotal)}) - Spend (${fmt(spendTotal)})`;
-
-  const MAX = 50;
-  setJarFill('saveFillRect',  saveTotal,  MAX);
-  setJarFill('investFillRect', investTotal, MAX);
-  setJarFill('spendFillRect', spendTotal, MAX);
-
-  const jar = state.activeJar;
-  COINS.forEach(coin => {
-    const cnt = state[jar][coin.id] || 0;
-    document.getElementById(`cnt-${coin.id}`).textContent = cnt;
-    document.getElementById(`val-${coin.id}`).textContent = fmt(cnt * coin.value);
+function render(){
+  const save=calcJarTotal('save'),spend=calcJarTotal('spend'),invest=calcInvestTotal();
+  document.getElementById('save-total').textContent=fmt(save);
+  document.getElementById('invest-total').textContent=fmt(invest);
+  document.getElementById('spend-total').textContent=fmt(spend);
+  document.getElementById('my-money-total').textContent=fmt(Math.max(0,save+invest-spend));
+  const MAX=50;
+  setJarFill('saveFillRect',save,MAX);
+  setJarFill('investFillRect',invest,MAX);
+  setJarFill('spendFillRect',spend,MAX);
+  const jar=state.activeJar;
+  COINS.forEach(c=>{
+    const cnt=state[jar][c.id]||0;
+    document.getElementById('cnt-'+c.id).textContent=cnt;
+    document.getElementById('val-'+c.id).textContent=fmt(cnt*c.value);
   });
-
-  renderTrend();
-  renderHelpList();
-  renderDivList();
+  renderTrend();renderHelpList();renderDivList();
 }
 
-function setJarFill(rectId, total, max) {
-  const rect = document.getElementById(rectId);
-  if (!rect) return;
-  const pct = Math.min(total / max, 1);
-  const fillH = pct * 36;
-  rect.setAttribute('y', 50 - fillH);
-  rect.setAttribute('height', fillH);
+function setJarFill(id,total,max){
+  const rect=document.getElementById(id);if(!rect)return;
+  const h=Math.min(total/max,1)*36;
+  rect.setAttribute('y',50-h);rect.setAttribute('height',h);
 }
 
-// ─── HISTORY & CAROUSEL ──────────────────────────────────────────────────
-function recordHistory() {
-  const saveTotal  = calcJarTotal('save');
-  const spendTotal = calcJarTotal('spend');
-  const today = new Date().toLocaleDateString('en-SG', {day:'numeric', month:'short'});
-  const last = state.history[state.history.length - 1];
-  if (last && last.date === today) {
-    last.save  = saveTotal;
-    last.spend = spendTotal;
-  } else {
-    state.history.push({ date: today, save: saveTotal, spend: spendTotal });
-    if (state.history.length > 10) state.history.shift();
-  }
+function recordHistory(){
+  const save=calcJarTotal('save'),spend=calcJarTotal('spend');
+  const today=new Date().toLocaleDateString('en-SG',{day:'numeric',month:'short'});
+  const last=state.history[state.history.length-1];
+  if(last&&last.date===today){last.save=save;last.spend=spend;}
+  else{state.history.push({date:today,save,spend});if(state.history.length>10)state.history.shift();}
   saveState();
 }
 
-function updateDots() {
-  const vp = document.getElementById('carousel-viewport');
-  if (!vp) return;
-  const index = Math.round(vp.scrollLeft / vp.clientWidth);
-  document.getElementById('dot-1').className = 'carousel-dot' + (index === 0 ? ' active' : '');
-  document.getElementById('dot-2').className = 'carousel-dot' + (index === 1 ? ' active' : '');
-  document.getElementById('dot-3').className = 'carousel-dot' + (index === 2 ? ' active' : '');
+function updateDots(){
+  const vp=document.getElementById('carousel-viewport');if(!vp)return;
+  const i=Math.round(vp.scrollLeft/vp.clientWidth);
+  [1,2,3].forEach(n=>document.getElementById('dot-'+n).className='carousel-dot'+(i===n-1?' active':''));
 }
 
-function renderHelpList() {
-  const list = document.getElementById('help-list');
-  if (!state.helpHistory || state.helpHistory.length === 0) {
-    list.innerHTML = '<div class="help-empty">No help tasks yet.<br>Time to do some chores! 🧹</div>';
-    return;
-  }
-  list.innerHTML = state.helpHistory.map(h => `
-    <div class="help-item">
-      <div class="help-date">${h.date}</div>
-      <div class="help-text">${h.text} <span style="color:var(--gold); font-size:11px; float:right;">+$${h.amount.toFixed(2)}</span></div>
-    </div>
-  `).join('');
+function renderHelpList(){
+  const list=document.getElementById('help-list');
+  list.innerHTML=state.helpHistory?.length
+    ?state.helpHistory.map(h=>`<div class="help-item"><div class="help-date">${h.date}</div><div class="help-text">${h.text}<span style="color:var(--gold);font-size:11px;float:right">+$${h.amount.toFixed(2)}</span></div></div>`).join('')
+    :'<div class="help-empty">No help tasks yet.<br>Time to do some chores! 🧹</div>';
 }
 
-function renderDivList() {
-  const list = document.getElementById('div-list');
-  if (!state.divHistory || state.divHistory.length === 0) {
-    list.innerHTML = '<div class="help-empty">No dividends yet.<br>Buy some stocks to earn! 🏢</div>';
-    return;
-  }
-  list.innerHTML = state.divHistory.map(h => `
-    <div class="help-item">
-      <div class="help-date">${h.date}</div>
-      <div class="help-text">${h.text} <span style="color:var(--green); font-size:11px; float:right;">+$${h.amount.toFixed(2)}</span></div>
-    </div>
-  `).join('');
+function renderDivList(){
+  const list=document.getElementById('div-list');
+  list.innerHTML=state.divHistory?.length
+    ?state.divHistory.map(h=>`<div class="help-item"><div class="help-date">${h.date}</div><div class="help-text">${h.text}<span style="color:var(--green);font-size:11px;float:right">+$${h.amount.toFixed(2)}</span></div></div>`).join('')
+    :'<div class="help-empty">No dividends yet.<br>Buy some stocks to earn! 🏢</div>';
 }
 
-function renderTrend() {
-  const svg = document.getElementById('trend-svg');
-  const latestEl = document.getElementById('trend-latest');
-  const weekly = aggregateWeekly(state.history);
-  
-  const grand = Math.max(0, calcJarTotal('save') + calcInvestTotal() - calcJarTotal('spend'));
-  const todayLabel = new Date().toLocaleDateString('en-SG', {day:'numeric', month:'short'});
-
-  if (weekly.length === 0 || weekly[weekly.length-1].label !== todayLabel) {
-    weekly.push({ label: todayLabel, total: grand });
-  } else {
-    weekly[weekly.length-1].total = grand;
-  }
-
-  latestEl.textContent = fmt(grand);
-
-  if (weekly.length < 2) {
-    svg.innerHTML = `<text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" fill="rgba(255,255,255,0.25)" font-family="Nunito,sans-serif" font-size="11" font-weight="700">Keep saving to see your trend! 🌱</text>`;
+function renderTrend(){
+  const svg=document.getElementById('trend-svg');
+  const latestEl=document.getElementById('trend-latest');
+  const weekly=aggregateWeekly(state.history);
+  const grand=Math.max(0,calcJarTotal('save')+calcInvestTotal()-calcJarTotal('spend'));
+  const todayLabel=new Date().toLocaleDateString('en-SG',{day:'numeric',month:'short'});
+  const last=weekly[weekly.length-1];
+  if(!last||last.label!==todayLabel)weekly.push({label:todayLabel,total:grand});
+  else last.total=grand;
+  latestEl.textContent=fmt(grand);
+  if(weekly.length<2){
+    svg.innerHTML=`<text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" fill="rgba(255,255,255,0.25)" font-family="Nunito,sans-serif" font-size="11" font-weight="700">Keep saving to see your trend! 🌱</text>`;
     return;
   }
-
-  const W = svg.clientWidth || 280, H = svg.clientHeight || 70;
-  const PAD_L = 28, PAD_R = 8, PAD_T = 10, PAD_B = 20;
-  const W2 = W - PAD_L - PAD_R, H2 = H - PAD_T - PAD_B;
-
-  const vals = weekly.map(w => w.total);
-  const minV = Math.min(...vals), maxV = Math.max(...vals);
-  const range = maxV - minV || 1;
-
-  const pts = weekly.map((w, i) => ({
-    x: PAD_L + (i / (weekly.length - 1)) * W2,
-    y: PAD_T + H2 - ((w.total - minV) / range) * H2,
-    label: w.label, total: w.total
+  const W=svg.clientWidth||280,H=svg.clientHeight||70;
+  const PL=28,PR=8,PT=10,PB=20,W2=W-PL-PR,H2=H-PT-PB;
+  const vals=weekly.map(w=>w.total),minV=Math.min(...vals),maxV=Math.max(...vals),range=maxV-minV||1;
+  const pts=weekly.map((w,i)=>({
+    x:PL+(i/(weekly.length-1))*W2,
+    y:PT+H2-((w.total-minV)/range)*H2,
+    label:w.label,total:w.total
   }));
-
-  const areaPath = `M${pts[0].x},${pts[0].y} ` + pts.slice(1).map((p,i) => `C${(pts[i].x + p.x)/2},${pts[i].y} ${(pts[i].x + p.x)/2},${p.y} ${p.x},${p.y}`).join(' ') + ` L${pts[pts.length-1].x},${PAD_T+H2} L${pts[0].x},${PAD_T+H2} Z`;
-  const linePath = `M${pts[0].x},${pts[0].y} ` + pts.slice(1).map((p,i) => `C${(pts[i].x + p.x)/2},${pts[i].y} ${(pts[i].x + p.x)/2},${p.y} ${p.x},${p.y}`).join(' ');
-
-  const labelIdxs = [0, Math.floor((weekly.length-1)/2), weekly.length-1];
-  const xlabels = [...new Set(labelIdxs)].map(i => `<text x="${pts[i].x}" y="${H-3}" text-anchor="middle" fill="rgba(255,255,255,0.35)" font-family="Nunito,sans-serif" font-size="8" font-weight="700">${weekly[i].label}</text>`).join('');
-  const ylabels = [minV, maxV].map((v, i) => `<text x="${PAD_L - 3}" y="${i===0 ? PAD_T+H2 : PAD_T}" text-anchor="end" dominant-baseline="middle" fill="rgba(255,255,255,0.3)" font-family="Nunito,sans-serif" font-size="8" font-weight="700">$${v.toFixed(0)}</text>`).join('');
-
-  const last = pts[pts.length - 1];
-  svg.innerHTML = `
-    <defs><linearGradient id="trendGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="rgba(255,215,0,0.35)"/><stop offset="100%" stop-color="rgba(255,215,0,0.0)"/></linearGradient></defs>
-    <line x1="${PAD_L}" y1="${PAD_T + H2}" x2="${PAD_L + W2}" y2="${PAD_T + H2}" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
-    <line x1="${PAD_L}" y1="${PAD_T}" x2="${PAD_L + W2}" y2="${PAD_T}" stroke="rgba(255,255,255,0.05)" stroke-width="1" stroke-dasharray="3,3"/>
-    <path d="${areaPath}" fill="url(#trendGrad)"/>
+  const curve=(p,pi)=>`C${(pts[pi].x+p.x)/2},${pts[pi].y} ${(pts[pi].x+p.x)/2},${p.y} ${p.x},${p.y}`;
+  const areaPath=`M${pts[0].x},${pts[0].y} ${pts.slice(1).map(curve).join(' ')} L${pts[pts.length-1].x},${PT+H2} L${pts[0].x},${PT+H2} Z`;
+  const linePath=`M${pts[0].x},${pts[0].y} ${pts.slice(1).map(curve).join(' ')}`;
+  const idxs=[...new Set([0,Math.floor((weekly.length-1)/2),weekly.length-1])];
+  const lp=pts[pts.length-1];
+  svg.innerHTML=`
+    <defs><linearGradient id="tG" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="rgba(255,215,0,0.35)"/><stop offset="100%" stop-color="rgba(255,215,0,0)"/></linearGradient></defs>
+    <line x1="${PL}" y1="${PT+H2}" x2="${PL+W2}" y2="${PT+H2}" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+    <line x1="${PL}" y1="${PT}" x2="${PL+W2}" y2="${PT}" stroke="rgba(255,255,255,0.05)" stroke-width="1" stroke-dasharray="3,3"/>
+    <path d="${areaPath}" fill="url(#tG)"/>
     <path d="${linePath}" fill="none" stroke="#FFD700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-    ${pts.map(p => `<circle cx="${p.x}" cy="${p.y}" r="2" fill="rgba(255,215,0,0.6)"/>`).join('')}
-    <circle cx="${last.x}" cy="${last.y}" r="6" fill="rgba(255,215,0,0.15)"/><circle cx="${last.x}" cy="${last.y}" r="3.5" fill="#FFD700"/>
-    ${xlabels}${ylabels}
-  `;
+    ${pts.map(p=>`<circle cx="${p.x}" cy="${p.y}" r="2" fill="rgba(255,215,0,0.6)"/>`).join('')}
+    <circle cx="${lp.x}" cy="${lp.y}" r="6" fill="rgba(255,215,0,0.15)"/>
+    <circle cx="${lp.x}" cy="${lp.y}" r="3.5" fill="#FFD700"/>
+    ${idxs.map(i=>`<text x="${pts[i].x}" y="${H-3}" text-anchor="middle" fill="rgba(255,255,255,0.35)" font-family="Nunito,sans-serif" font-size="8" font-weight="700">${weekly[i].label}</text>`).join('')}
+    ${[minV,maxV].map((v,i)=>`<text x="${PL-3}" y="${i===0?PT+H2:PT}" text-anchor="end" dominant-baseline="middle" fill="rgba(255,255,255,0.3)" font-family="Nunito,sans-serif" font-size="8" font-weight="700">$${v.toFixed(0)}</text>`).join('')}`;
 }
 
-function aggregateWeekly(history) {
-  if (!history.length) return [];
-  const weeks = {};
-  history.forEach(h => {
-    const d = new Date(h.date + ' ' + new Date().getFullYear());
-    const day = d.getDay();
-    const weekStart = new Date(d);
-    weekStart.setDate(d.getDate() - day);
-    const key = weekStart.toISOString().slice(0, 10);
-    weeks[key] = { label: h.date, total: Math.max(0, (h.save || 0) - (h.spend || 0)) };
+function aggregateWeekly(history){
+  if(!history.length)return[];
+  const weeks={},yr=new Date().getFullYear();
+  history.forEach(h=>{
+    const d=new Date(h.date+' '+yr),day=d.getDay();
+    d.setDate(d.getDate()-day);
+    weeks[d.toISOString().slice(0,10)]={label:h.date,total:Math.max(0,(h.save||0)-(h.spend||0))};
   });
   return Object.values(weeks);
 }
 
-// ─── CONFETTI ────────────────────────────────────────────────────────────
-function confettiBurst() {
-  const canvas = document.createElement('div');
-  canvas.className = 'confetti';
-  document.body.appendChild(canvas);
-  const colors = ['#FFD700','#FF6B9D','#4FC3F7','#00E676','#B39DDB','#FFA500'];
-  for (let i = 0; i < 18; i++) {
-    const p = document.createElement('div');
-    const size = 6 + Math.random() * 8;
-    p.style.cssText = `position:absolute; width:${size}px;height:${size}px; background:${colors[Math.floor(Math.random()*colors.length)]}; border-radius:${Math.random()>0.5?'50%':'3px'}; left:${20+Math.random()*60}%; top:${40+Math.random()*20}%; animation: floatUp ${0.8+Math.random()*0.6}s ease-out ${Math.random()*0.3}s forwards;`;
+const CONFETTI_COLORS=['#FFD700','#FF6B9D','#4FC3F7','#00E676','#B39DDB','#FFA500'];
+function confettiBurst(){
+  const canvas=document.createElement('div');
+  canvas.className='confetti';
+  for(let i=0;i<18;i++){
+    const p=document.createElement('div'),sz=6+Math.random()*8;
+    p.style.cssText=`position:absolute;width:${sz}px;height:${sz}px;background:${CONFETTI_COLORS[Math.floor(Math.random()*6)]};border-radius:${Math.random()>.5?'50%':'3px'};left:${20+Math.random()*60}%;top:${40+Math.random()*20}%;animation:floatUp ${.8+Math.random()*.6}s ease-out ${Math.random()*.3}s forwards`;
     canvas.appendChild(p);
   }
-  setTimeout(() => canvas.remove(), 2000);
+  document.body.appendChild(canvas);
+  setTimeout(()=>canvas.remove(),2000);
 }
 
-// ─── BACKUP / RESTORE ────────────────────────────────────────────────────
-function openBackup() {
-  document.getElementById('backup-text').value = localStorage.getItem('myjars_v2') || '';
-  document.getElementById('backup-msg').textContent = '';
+function openBackup(){
+  document.getElementById('backup-text').value=localStorage.getItem('myjars_v2')||'';
+  document.getElementById('backup-msg').textContent='';
   document.getElementById('backup-modal').classList.add('open');
 }
-function closeBackup() {
+function closeBackup(){
   document.getElementById('backup-modal').classList.remove('open');
-  pinEntry = '';
-  const sec = document.getElementById('pin-section');
-  if (sec) sec.style.display = 'none';
+  pinEntry='';
+  document.getElementById('pin-section').style.display='none';
   updatePinDots();
 }
-function doExport() {
-  const text = localStorage.getItem('myjars_v2') || '';
-  if (!text) { showMsg('Nothing to export yet!', 'err'); return; }
-  document.getElementById('backup-text').value = text;
-  navigator.clipboard.writeText(text).then(() => showMsg('✅ Copied! Paste it into Notes to save.', 'ok')).catch(() => { document.getElementById('backup-text').select(); showMsg('📋 Select all text above and copy manually.', 'ok'); });
+function doExport(){
+  const text=localStorage.getItem('myjars_v2')||'';
+  if(!text){showMsg('Nothing to export yet!','err');return;}
+  document.getElementById('backup-text').value=text;
+  navigator.clipboard.writeText(text).then(()=>showMsg('✅ Copied! Paste it into Notes to save.','ok')).catch(()=>{document.getElementById('backup-text').select();showMsg('📋 Select all text above and copy manually.','ok');});
 }
-function doImport() {
-  const text = document.getElementById('backup-text').value.trim();
-  if (!text) { showMsg('Paste your backup text first!', 'err'); return; }
-  try {
-    const parsed = JSON.parse(text);
-    if (!parsed.save || !parsed.spend) throw new Error();
-    localStorage.setItem('myjars_v2', text);
-    state = loadState();
-    setTab(state.activeJar); 
-    showMsg('✅ Restored successfully!', 'ok');
-    setTimeout(closeBackup, 1200);
-  } catch(e) { showMsg('❌ Invalid backup text. Try again.', 'err'); }
+function doImport(){
+  const text=document.getElementById('backup-text').value.trim();
+  if(!text){showMsg('Paste your backup text first!','err');return;}
+  try{
+    const p=JSON.parse(text);
+    if(!p.save||!p.spend)throw 0;
+    localStorage.setItem('myjars_v2',text);
+    state=loadState();setTab(state.activeJar);
+    showMsg('✅ Restored successfully!','ok');setTimeout(closeBackup,1200);
+  }catch{showMsg('❌ Invalid backup text. Try again.','err');}
 }
-function showMsg(msg, type) {
-  const el = document.getElementById('backup-msg');
-  el.textContent = msg; el.className = 'backup-msg ' + type;
-}
+function showMsg(msg,type){const el=document.getElementById('backup-msg');el.textContent=msg;el.className='backup-msg '+type;}
 
-// ─── RESET / PIN ──────────────────────────────────────────────────────────
-const PASSCODE = '65224488';
-let pinEntry = '';
-
-function togglePinPad() {
-  const sec = document.getElementById('pin-section');
-  sec.style.display = sec.style.display !== 'none' ? 'none' : 'flex';
-  pinEntry = ''; updatePinDots(); document.getElementById('pin-msg').textContent = '';
+const PASSCODE='65224488';
+let pinEntry='';
+function togglePinPad(){
+  const s=document.getElementById('pin-section');
+  s.style.display=s.style.display!=='none'?'none':'flex';
+  pinEntry='';updatePinDots();document.getElementById('pin-msg').textContent='';
 }
-function pinKey(digit) { if (pinEntry.length < 8) { pinEntry += digit; updatePinDots(); } }
-function pinClear() { pinEntry = pinEntry.slice(0, -1); updatePinDots(); }
-function updatePinDots() { for (let i = 0; i < 8; i++) document.getElementById('pd' + i).classList.toggle('filled', i < pinEntry.length); }
-function pinSubmit() {
-  if (pinEntry === PASSCODE) {
-    localStorage.removeItem('myjars_v2');
-    state = loadState();
-    setTab('save');
-    document.getElementById('backup-text').value = '';
-    document.getElementById('pin-msg').textContent = '';
-    showMsg('All data has been reset.', 'ok');
-    setTimeout(closeBackup, 1400);
-  } else {
-    pinEntry = ''; updatePinDots();
-    document.querySelectorAll('.pin-dot').forEach(d => { d.style.animation = 'none'; void d.offsetWidth; d.style.animation = 'pinShake 0.35s ease'; });
-    const msgEl = document.getElementById('pin-msg');
-    msgEl.textContent = 'Wrong passcode'; msgEl.className = 'backup-msg err';
-    setTimeout(() => { msgEl.textContent = ''; }, 1500);
+function pinKey(d){if(pinEntry.length<8){pinEntry+=d;updatePinDots();}}
+function pinClear(){pinEntry=pinEntry.slice(0,-1);updatePinDots();}
+function updatePinDots(){for(let i=0;i<8;i++)document.getElementById('pd'+i).classList.toggle('filled',i<pinEntry.length);}
+function pinSubmit(){
+  if(pinEntry===PASSCODE){
+    localStorage.removeItem('myjars_v2');state=loadState();setTab('save');
+    document.getElementById('backup-text').value='';document.getElementById('pin-msg').textContent='';
+    showMsg('All data has been reset.','ok');setTimeout(closeBackup,1400);
+  }else{
+    pinEntry='';updatePinDots();
+    document.querySelectorAll('.pin-dot').forEach(d=>{d.style.animation='none';void d.offsetWidth;d.style.animation='pinShake .35s ease';});
+    const el=document.getElementById('pin-msg');el.textContent='Wrong passcode';el.className='backup-msg err';
+    setTimeout(()=>{el.textContent='';},1500);
   }
 }
 
-// ─── INIT ─────────────────────────────────────────────────────────────────
 buildGrid();
-runMarketUpdate(); 
+runMarketUpdate();
 setTab(state.activeJar);
 
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(err => console.log('SW reg failed:', err)));
-}
+if('serviceWorker' in navigator)
+  window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
 </script>
 </body>
 </html>
