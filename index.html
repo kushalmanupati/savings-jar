@@ -23,12 +23,13 @@
     --blue: #4fc3f7;
     --purple: #b39ddb;
     --jar-save: #43e97b;
+    --jar-invest: #4fc3f7;
     --jar-spend: #f093fb;
     --text: #fff;
     --text2: rgba(255,255,255,0.7);
     --card: rgba(255,255,255,0.07);
     --card-border: rgba(255,255,255,0.12);
-    --radius: 24px;
+    --radius: 20px;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -91,8 +92,8 @@
   /* JARS ROW */
   .jars-row {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
     padding: 0 12px;
     flex-shrink: 0;
   }
@@ -101,11 +102,11 @@
     background: var(--card);
     border: 1px solid var(--card-border);
     border-radius: var(--radius);
-    padding: 12px;
+    padding: 10px 4px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 6px;
+    gap: 4px;
     position: relative;
     overflow: hidden;
   }
@@ -117,36 +118,39 @@
     opacity: 0.08;
   }
   .jar-save::before { background: var(--jar-save); }
+  .jar-invest::before { background: var(--jar-invest); }
   .jar-spend::before { background: var(--jar-spend); }
 
   .jar-label {
-    font-size: 11px;
+    font-size: 9px;
     font-weight: 800;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 0.5px;
     opacity: 0.8;
   }
   .jar-save .jar-label { color: var(--jar-save); }
+  .jar-invest .jar-label { color: var(--jar-invest); }
   .jar-spend .jar-label { color: var(--jar-spend); }
 
   .jar-amount {
     font-family: 'Fredoka One', cursive;
-    font-size: 28px;
+    font-size: 18px;
     line-height: 1;
   }
   .jar-save .jar-amount { color: var(--jar-save); }
+  .jar-invest .jar-amount { color: var(--jar-invest); }
   .jar-spend .jar-amount { color: var(--jar-spend); }
 
   .jar-visual {
-    width: 64px;
-    height: 54px;
+    width: 48px;
+    height: 40px;
     position: relative;
   }
 
   /* SVG jar fill level */
   .jar-svg { width: 100%; height: 100%; }
 
-  /* TOTAL BANNER (NEW FORMAT) */
+  /* TOTAL BANNER */
   .total-banner {
     margin: 8px 12px 0;
     background: linear-gradient(135deg, rgba(255,215,0,0.15), rgba(255,165,0,0.1));
@@ -158,6 +162,7 @@
     align-items: stretch;
     gap: 4px;
     flex-shrink: 0;
+    overflow: hidden;
   }
   .total-label { font-size: 12px; font-weight: 800; color: var(--gold); opacity: 0.85; text-transform: uppercase; letter-spacing: 1px; }
   .total-amount { font-family: 'Fredoka One', cursive; font-size: 26px; color: var(--gold); }
@@ -638,7 +643,7 @@
   <div id="approve-modal" class="modal-overlay" onclick="closeApprove()">
     <div class="modal-box" onclick="event.stopPropagation()">
       <div class="modal-title">🔒 Ask Mama/Papa</div>
-      <div class="modal-desc">Enter passcode to approve this addition.</div>
+      <div class="modal-desc">Enter passcode to approve this transaction.</div>
       <div class="pin-section">
         <div class="pin-dots" id="approve-pin-dots">
           <span class="pin-dot" id="apd0"></span>
@@ -687,6 +692,28 @@
         </svg>
       </div>
     </div>
+    
+    <div class="jar-card jar-invest">
+      <div class="jar-label">💙 Invest</div>
+      <div class="jar-amount" id="invest-total">S$0.00</div>
+      <div class="jar-visual">
+        <svg class="jar-svg" viewBox="0 0 64 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M18 8 Q18 4 22 4 L42 4 Q46 4 46 8 L48 14 Q52 16 52 20 L52 46 Q52 50 48 50 L16 50 Q12 50 12 46 L12 20 Q12 16 16 14 Z" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
+          <clipPath id="investClip">
+            <rect x="12" y="50" width="40" height="0" id="investFillRect"/>
+          </clipPath>
+          <path d="M18 8 Q18 4 22 4 L42 4 Q46 4 46 8 L48 14 Q52 16 52 20 L52 46 Q52 50 48 50 L16 50 Q12 50 12 46 L12 20 Q12 16 16 14 Z" fill="url(#investGrad)" clip-path="url(#investClip)"/>
+          <defs>
+            <linearGradient id="investGrad" x1="0" y1="0" x2="0" y2="1" gradientUnits="objectBoundingBox">
+              <stop offset="0%" stop-color="#4fc3f7"/>
+              <stop offset="100%" stop-color="#0288d1"/>
+            </linearGradient>
+          </defs>
+          <ellipse cx="23" cy="22" rx="3" ry="5" fill="rgba(255,255,255,0.15)" transform="rotate(-20 23 22)"/>
+        </svg>
+      </div>
+    </div>
+    
     <div class="jar-card jar-spend">
       <div class="jar-label">💜 Spend</div>
       <div class="jar-amount" id="spend-total">S$0.00</div>
@@ -710,11 +737,11 @@
   </div>
 
   <div class="total-banner">
-    <div style="display: flex; justify-content: space-between; align-items: center;">
+    <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
       <span class="total-label">⭐ My Money</span>
       <span class="total-amount" id="my-money-total">S$0.00</span>
     </div>
-    <div id="my-money-breakdown" style="font-size: 10px; color: var(--text2); text-align: right; font-weight: 700;">
+    <div id="my-money-breakdown" style="font-size: 10px; color: var(--text2); text-align: right; font-weight: 700; white-space: nowrap; width: 100%; overflow: hidden; text-overflow: ellipsis;">
       Save (S$0.00) + Invest (S$0.00) - Spend (S$0.00)
     </div>
   </div>
@@ -1075,8 +1102,8 @@ function renderMarket() {
         <div class="stock-actions">
           ${shares > 0 ? `<div class="stock-shares">${shares} Shares</div>` : ''}
           <div style="display:flex; gap:4px; margin-top:4px;">
-            ${shares > 0 ? `<button class="btn-trade" onclick="tradeStock('${id}', -1)" style="color:#ff6b6b">Sell</button>` : ''}
-            <button class="btn-trade" onclick="tradeStock('${id}', 1)" style="color:var(--green)">Buy</button>
+            ${shares > 0 ? `<button class="btn-trade" onclick="askTradeApproval('${id}', -1, event)" style="color:#ff6b6b">Sell</button>` : ''}
+            <button class="btn-trade" onclick="askTradeApproval('${id}', 1, event)" style="color:var(--green)">Buy</button>
           </div>
         </div>
       </div>
@@ -1086,10 +1113,11 @@ function renderMarket() {
   document.getElementById('portfolio-total').textContent = fmt(totalValue);
 }
 
-function tradeStock(id, direction) {
-  const price = state.prices[id];
+function askTradeApproval(id, direction, e) {
+  e.stopPropagation();
   
-  if (direction === 1) { // BUY
+  if (direction === 1) { 
+    const price = state.prices[id];
     let rem = Math.round(price * 100);
     let tempSave = { ...state.save };
     const sorted = [...COINS].sort((a,b) => b.value - a.value);
@@ -1103,14 +1131,39 @@ function tradeStock(id, direction) {
     }
     
     if (rem > 0) {
-      alert("Uh oh! You don't have exact change for this. Ask Mama/Papa to break your bigger coins into smaller ones first!");
-      return;
+      alert("Uh oh! You don't have exact change to buy this. Ask Mama/Papa to break your bigger coins into smaller ones first!");
+      return; 
     }
+  }
+
+  approveAction = { type: 'trade', id: id, direction: direction };
+  approveEntry = '';
+  updateApproveDots();
+  document.getElementById('approve-msg').textContent = '';
+  document.getElementById('approve-modal').classList.add('open');
+}
+
+function tradeStock(id, direction) {
+  const price = state.prices[id];
+  
+  if (direction === 1) { 
+    let rem = Math.round(price * 100);
+    let tempSave = { ...state.save };
+    const sorted = [...COINS].sort((a,b) => b.value - a.value);
+    
+    for(let c of sorted) {
+      let cv = Math.round(c.value * 100);
+      let needed = Math.floor(rem / cv);
+      let available = tempSave[c.id] || 0;
+      let toTake = Math.min(needed, available);
+      if(toTake > 0) { tempSave[c.id] -= toTake; rem -= toTake * cv; }
+    }
+    
     state.save = tempSave;
     state.portfolio[id] = (state.portfolio[id] || 0) + 1;
     confettiBurst();
     
-  } else { // SELL
+  } else { 
     state.portfolio[id] -= 1;
     let rem = Math.round(price * 100);
     const sorted = [...COINS].sort((a,b) => b.value - a.value);
@@ -1173,6 +1226,8 @@ function apprSubmit() {
       executeCoinChange(approveAction.id, approveAction.delta);
     } else if (approveAction && approveAction.type === 'help') {
       executeHelp(approveAction.amount, approveAction.text);
+    } else if (approveAction && approveAction.type === 'trade') {
+      tradeStock(approveAction.id, approveAction.direction);
     }
     closeApprove();
   } else {
@@ -1203,10 +1258,10 @@ function render() {
   const spendTotal = calcJarTotal('spend');
   const investTotal = calcInvestTotal();
   
-  // NEW FORMULA
   const myMoney = Math.max(0, saveTotal + investTotal - spendTotal);
 
   document.getElementById('save-total').textContent  = fmt(saveTotal);
+  document.getElementById('invest-total').textContent = fmt(investTotal);
   document.getElementById('spend-total').textContent = fmt(spendTotal);
   
   document.getElementById('my-money-total').textContent = fmt(myMoney);
@@ -1214,6 +1269,7 @@ function render() {
 
   const MAX = 50;
   setJarFill('saveFillRect',  saveTotal,  MAX);
+  setJarFill('investFillRect', investTotal, MAX);
   setJarFill('spendFillRect', spendTotal, MAX);
 
   const jar = state.activeJar;
